@@ -32,8 +32,7 @@ export class UsersService {
   }
   /**
    * 유저 테이블 like 유저id or like 유저명 검색
-   * @param user_id
-   * @param user_nm
+   * @param user_idnm
    * @returns 유저 정보(복수)
    */
   async search(user_idnm): Promise<Users[]> {
@@ -78,8 +77,11 @@ export class UsersService {
    * @returns Boolean
    */
   async update(user_id: string, usersData: UpdateUsersDto) {
-    //await this.transformPassword(usersData.password);
-    console.log(usersData);
-    const uUser = await this.usersRepository.update(user_id, usersData);
+    await this.usersRepository.update(
+      {
+        user_id: user_id,
+      },
+      usersData,
+    );
   }
 }
