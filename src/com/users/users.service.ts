@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
+import { PassWordService } from '../pass-word/pass-word.service';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { Users } from './entities/Users.entity';
@@ -13,6 +13,8 @@ export class UsersService {
   constructor(
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
+
+    private readonly passwordService: PassWordService,
   ) {}
   /**
    * 전체 유저 정보 조회
@@ -23,17 +25,31 @@ export class UsersService {
   }
 
   /**
-   * 유저 단일 조회(create 또는 update 사용 전 Validate check용)
+   * 유저 ID,PW 체크용 단일 조회
    * @param user_id
-   * @returns 단일 유저 정보
+   * @returns 단일 유저 ID,PW
    */
   async getOne(user_id: string): Promise<Users> {
     return await this.usersRepository
       .createQueryBuilder()
-      .select('user_id')
+      .select(['user_id', 'password'])
       .where('user_id = :user_id', { user_id: `${user_id}` })
       .getRawOne();
   }
+
+  /**
+   * 유저 단일 조회
+   * @param user_id
+   * @returns 단일 유저 정보
+   */
+  async getUser(user_id: string): Promise<Users> {
+    return await this.usersRepository
+      .createQueryBuilder()
+      .select(['user_id', 'user_nm'])
+      .where('user_id = :user_id', { user_id: `${user_id}` })
+      .getRawOne();
+  }
+
   /**
    * 유저 테이블 like 유저id or like 유저명 검색
    * @param user_idnm
@@ -65,23 +81,15 @@ export class UsersService {
   }
 
   /**
-   * 패스워드 암호화
-   * @param usersData
-   * @returns
-   */
-  async transformPassword(usersData: CreateUsersDto): Promise<void> {
-    usersData.password = await bcrypt.hash(usersData.password, 10);
-    return Promise.resolve();
-  }
-
-  /**
    * 유저 생성
    * @param usersData
    * @returns Boolean
    */
   async create(usersData: CreateUsersDto) {
     if (!(await this.getOne(usersData.user_id))) {
-      await this.transformPassword(usersData);
+      usersData.password = await this.passwordService.hashPassword(
+        usersData.password,
+      );
       await this.usersRepository.save(usersData);
     } else {
       const error = { user_id: '이미 사용중인 아이디 입니다.' };
@@ -106,7 +114,7 @@ export class UsersService {
         usersData,
       );
     } else {
-      const error = { user_id: '등록되지 사용자 입니다.' };
+      const error = { user_id: '등록되지 않은 사용자 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
