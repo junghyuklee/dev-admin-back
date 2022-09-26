@@ -1,8 +1,8 @@
-import { UpdateUsersDto } from './dto/update-users.dto';
+import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import { CreateUsersDto } from './dto/create-users.dto';
-import { UsersService } from './users.service';
-import { Body, Controller, Post, Get, Patch, Query } from '@nestjs/common';
+import { UpdateUsersDto } from './dto/update-users.dto';
 import { Users } from './entities/Users.entity';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {

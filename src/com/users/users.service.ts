@@ -1,10 +1,10 @@
-import { UpdateUsersDto } from './dto/update-users.dto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { Repository, SimpleConsoleLogger } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateUsersDto } from './dto/create-users.dto';
+import { UpdateUsersDto } from './dto/update-users.dto';
 import { Users } from './entities/Users.entity';
 
 @Injectable()
@@ -28,19 +28,40 @@ export class UsersService {
    * @returns 단일 유저 정보
    */
   async getOne(user_id: string): Promise<Users> {
-    return await this.usersRepository.findOne({ where: { user_id: user_id } });
+    return await this.usersRepository
+      .createQueryBuilder()
+      .select('user_id')
+      .where('user_id = :user_id', { user_id: `${user_id}` })
+      .getRawOne();
   }
   /**
    * 유저 테이블 like 유저id or like 유저명 검색
    * @param user_idnm
    * @returns 유저 정보(복수)
    */
-  async search(user_idnm): Promise<Users[]> {
+  async search(user_idnm: string): Promise<Users[]> {
+    user_idnm === undefined || user_idnm === null
+      ? (user_idnm = '')
+      : user_idnm;
     return await this.usersRepository
       .createQueryBuilder()
+      .select([
+        'user_id',
+        'password_chg_date',
+        'user_nm',
+        'login_fail_cnt',
+        'admin_flag',
+        'user_desc',
+        'use_yn',
+        'created_at',
+        'create_user_id',
+        'updated_at',
+        'update_user_id',
+      ])
       .where('user_id like :user_id', { user_id: `%${user_idnm}%` })
       .orWhere('user_nm like :user_nm', { user_nm: `%${user_idnm}%` })
-      .getMany();
+      .addOrderBy('user_id', 'ASC')
+      .getRawMany();
   }
 
   /**
@@ -63,9 +84,9 @@ export class UsersService {
       await this.transformPassword(usersData);
       await this.usersRepository.save(usersData);
     } else {
-      const errors = { user_id: '이미 사용중인 아이디 입니다.' };
+      const error = { user_id: '이미 사용중인 아이디 입니다.' };
       throw new HttpException(
-        { message: 'Input data validation failed', errors },
+        { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -77,11 +98,19 @@ export class UsersService {
    * @returns Boolean
    */
   async update(user_id: string, usersData: UpdateUsersDto) {
-    await this.usersRepository.update(
-      {
-        user_id: user_id,
-      },
-      usersData,
-    );
+    if (await this.getOne(user_id)) {
+      await this.usersRepository.update(
+        {
+          user_id: user_id,
+        },
+        usersData,
+      );
+    } else {
+      const error = { user_id: '등록되지 사용자 입니다.' };
+      throw new HttpException(
+        { message: 'Input data validation failed', error },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
