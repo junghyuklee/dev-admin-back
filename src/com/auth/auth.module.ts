@@ -2,26 +2,32 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtStrategy } from '../jwt/jwt.strategy';
+import { PassWordService } from '../pass-word/pass-word.service';
 import { Users } from '../users/entities/Users.entity';
 import { UsersService } from '../users/users.service';
 import { UsersModule } from './../users/users.module';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { PassWordService } from '../pass-word/pass-word.service';
+import { jwtConstants } from './jwt/jwt.constants';
+import { JwtStrategy } from './stategy/jwt.strategy';
+import { LocalStrategy } from './stategy/local.strategy';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Users]),
-    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
-    // jwt 생성할 때 사용할 시크릿 키와 만료일자 적어주기
+    PassportModule,
     JwtModule.register({
-      secret: 'codev',
-      signOptions: { expiresIn: '60' },
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '600s' },
     }),
     UsersModule,
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, PassWordService, UsersService],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    PassWordService,
+    UsersService,
+  ],
+  exports: [AuthService],
 })
 export class AuthModule {}
