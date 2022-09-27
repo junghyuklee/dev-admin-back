@@ -22,11 +22,20 @@ export class UsersController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  login(@Request() req) {
-    const cookie = req.user;
-    console.log(cookie);
-    //res.setHeader('Set-Cookie', cookie);
-    return cookie;
+  async login(@Request() req, @Response() res) {
+    const token = req.user;
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000, //1 hour
+    });
+    return res.send({ message: 'success' });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/logout')
+  async logOutlogin(@Request() req, @Response() res) {
+    res.cookie('jwt', '');
+    return res.sendStatus(200);
   }
 
   @UseGuards(JwtAuthGuard)
