@@ -3,8 +3,8 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PassWordService } from '../pass-word/pass-word.service';
-import { CreateUsersDto } from './dto/create-users.dto';
-import { UpdateUsersDto } from './dto/update-users.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/Users.entity';
 
 @Injectable()
@@ -56,14 +56,17 @@ export class UsersService {
    * @returns 유저 정보(복수)
    */
   async search(user_idnm: string): Promise<Users[]> {
+    console.log(user_idnm);
     user_idnm === undefined || user_idnm === null
       ? (user_idnm = '')
       : user_idnm;
     return await this.usersRepository
       .createQueryBuilder()
       .select([
+        'id',
         'user_id',
         'password_chg_date',
+        'DATE_FORMAT(password_chg_date,"%Y-%m-%d") AS "password_chg_date"',
         'user_nm',
         'login_fail_cnt',
         'admin_flag',
@@ -85,7 +88,7 @@ export class UsersService {
    * @param usersData
    * @returns Boolean
    */
-  async create(usersData: CreateUsersDto) {
+  async create(usersData: CreateUserDto) {
     if (!(await this.getOne(usersData.user_id))) {
       usersData.password = await this.passwordService.hashPassword(
         usersData.password,
@@ -105,7 +108,7 @@ export class UsersService {
    * @param usersData
    * @returns Boolean
    */
-  async update(user_id: string, usersData: UpdateUsersDto) {
+  async update(user_id: string, usersData: UpdateUserDto) {
     if (await this.getOne(user_id)) {
       await this.usersRepository.update(
         {

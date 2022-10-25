@@ -18,7 +18,7 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainUpperLetter: true, //대문자 포함 강제
 };
 
-export class CreateUsersDto {
+export class CreateUserDto {
   @IsNotEmpty()
   @Matches(/^[a-z0-9]*$/)
   @MaxLength(20)

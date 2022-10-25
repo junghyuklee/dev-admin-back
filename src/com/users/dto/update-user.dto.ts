@@ -17,7 +17,7 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainUpperLetter: true, //대문자 포함 강제
 };
 
-export class UpdateUsersDto {
+export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @MinLength(8)

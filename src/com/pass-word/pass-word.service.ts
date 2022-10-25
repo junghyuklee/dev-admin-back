@@ -18,7 +18,10 @@ export class PassWordService {
    * @param hashedPassword 암호화 된 패스워드
    * @returns Boolean
    */
-  async validatePassword(plainTextPassword, hashedPassword): Promise<boolean> {
+  async validatePassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
     return await compare(plainTextPassword, hashedPassword);
   }
 }

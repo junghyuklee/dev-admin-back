@@ -20,6 +20,8 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors(); //TEST를 위한 CORS(Cross-domai) 허용
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, //validation을 위한 decorator가 붙어있지 않은 속성들은 제거
