@@ -1,9 +1,10 @@
 import {
-  IsOptional,
+  IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
   Validate,
+  Matches,
 } from 'class-validator';
 import {
   PasswordValidation,
@@ -17,24 +18,29 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainUpperLetter: true, //대문자 포함 강제
 };
 
-export class UpdateUserDto {
-  @IsOptional()
+export class CreateAdmUserDto {
+  @IsNotEmpty()
+  @Matches(/^[a-z0-9]*$/)
+  @MaxLength(20)
+  readonly user_id: string;
+
+  @IsNotEmpty()
   @IsString()
   @MinLength(8)
   @MaxLength(20)
   @Validate(PasswordValidation, [passwordRequirement])
-  password: string;
+  user_password: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @MaxLength(20)
-  readonly user_nm: string;
+  readonly user_name: string;
 
-  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  readonly user_admin_flag: string;
+
+  @IsNotEmpty()
   @IsString()
   readonly use_yn: string;
-
-  @IsOptional()
-  @IsString()
-  readonly admin_flag: string;
 }

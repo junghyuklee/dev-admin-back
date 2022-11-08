@@ -11,14 +11,14 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { LocalAuthGuard } from '../auth/guard/local.auth.guard';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Users } from './entities/Users.entity';
-import { UsersService } from './users.service';
+import { CreateAdmUserDto } from './dto/CreateAdmUser.dto';
+import { UpdateAdmUserDto } from './dto/UpdateAdmuser.dto';
+import { AdmUser } from './entities/AdmUser.entity';
+import { AdmUserService } from './AdmUser.service';
 
-@Controller('users')
-export class UsersController {
-  constructor(readonly UsersService: UsersService) {}
+@Controller('user')
+export class AdmUserController {
+  constructor(readonly admUserService: AdmUserService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
@@ -40,18 +40,21 @@ export class UsersController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Get('/search')
-  search(@Query('user_idnm') user_idnm: string): Promise<Users[]> {
-    return this.UsersService.search(user_idnm);
+  @Get('/searchUsers')
+  search(@Query('user_idnm') user_idnm: string): Promise<AdmUser[]> {
+    return this.admUserService.searchUsers(user_idnm);
   }
 
-  @Post('/create')
-  create(@Body() usersData: CreateUserDto) {
-    return this.UsersService.create(usersData);
+  @Post('/createUser')
+  create(@Body() usersData: CreateAdmUserDto) {
+    return this.admUserService.createUser(usersData);
   }
 
   @Patch('/update')
-  update(@Query('user_id') user_id: string, @Body() usersData: UpdateUserDto) {
-    return this.UsersService.update(user_id, usersData);
+  update(
+    @Query('user_key') user_key: string,
+    @Body() usersData: UpdateAdmUserDto,
+  ) {
+    return this.admUserService.updateUser(user_key, usersData);
   }
 }

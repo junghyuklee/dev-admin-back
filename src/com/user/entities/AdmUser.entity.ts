@@ -7,33 +7,36 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('Users')
-export class Users extends BaseEntity {
+@Entity('AdmUser')
+export class AdmUser extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  user_key: string;
+
+  @Column({ type: 'varchar', length: 10, comment: '구분코드' })
+  internal_div_key: string;
 
   @Column({ type: 'varchar', length: 100, comment: '사용자 아이디' })
   user_id: string;
 
-  @Column({ type: 'varchar', length: 300, comment: '비밀번호' })
-  password: string;
+  @Column({ type: 'varchar', length: 100, comment: '비밀번호' })
+  user_password: string;
 
   @Column({ type: 'date', comment: '비밀번호 수정일' })
   password_chg_date: Date;
 
-  @Column({ type: 'varchar', length: 50, comment: '사용자 명' })
-  user_nm: string;
+  @Column({ type: 'varchar', length: 100, comment: '사용자 명' })
+  user_name: string;
 
   @Column({ type: 'int', comment: '로그인 실패 횟수' })
-  login_fail_cnt: number;
+  user_login_fail_cnt: number;
 
   @Column({ type: 'varchar', length: 10, comment: '관리자 Flag' })
-  admin_flag: string;
+  user_admin_flag: string;
 
-  @Column({ type: 'varchar', length: 500, comment: '사용자 설명' })
+  @Column({ type: 'varchar', length: 2000, comment: '사용자 설명' })
   user_desc: string;
 
-  @Column({ type: 'varchar', length: 50, comment: '사용여부' })
+  @Column({ type: 'varchar', length: 10, comment: '사용여부' })
   use_yn: string;
 
   @CreateDateColumn({

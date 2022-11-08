@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PassWordService } from '../pass-word/pass-word.service';
-import { Users } from '../Users/entities/Users.entity';
-import { UsersService } from './../users/users.service';
+import { PassWordService } from '../passWord/pass-word.service';
+import { Users } from '../user/entities/AdmUser.entity';
+import { UsersService } from '../user/users.service';
 
 @Injectable()
 export class AuthService {

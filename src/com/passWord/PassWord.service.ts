@@ -8,8 +8,8 @@ export class PassWordService {
    * @param plainTextPassword 암호화되지 않은 패스워드
    * @returns hashedPassword 암호화 된 패스워드
    */
-  async hashPassword(password: string): Promise<string> {
-    return await hash(password, 20);
+  async hashPassword(userPassword: string): Promise<string> {
+    return await hash(userPassword, 20);
   }
 
   /**
