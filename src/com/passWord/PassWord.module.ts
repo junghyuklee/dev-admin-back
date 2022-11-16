@@ -3,5 +3,6 @@ import { PassWordService } from './PassWord.service';
 
 @Module({
   providers: [PassWordService],
+  exports: [PassWordService],
 })
 export class PassWordModule {}

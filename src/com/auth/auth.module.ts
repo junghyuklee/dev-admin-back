@@ -1,15 +1,15 @@
+import { AdmManageModule } from './../admManage/AdmManage.module';
+import { PassWordModule } from './../passWord/PassWord.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PassWordService } from '../passWord/passWord.service';
-import { AdmUser } from '../user/entities/AdmUser.entity';
-import { AdmUserService } from '../user/AdmUser.service';
-import { AdmUserModule } from '../user/AdmUser.module';
+import { AdmUser } from '../admUser/entities/AdmUser.entity';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './jwt/jwt.constants';
 import { JwtStrategy } from './stategy/jwt.strategy';
 import { LocalStrategy } from './stategy/local.strategy';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -19,15 +19,11 @@ import { LocalStrategy } from './stategy/local.strategy';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '600s' },
     }),
-    AdmUserModule,
+    PassWordModule,
+    AdmManageModule,
   ],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    PassWordService,
-    AdmUserService,
-  ],
+  controllers: [AuthController],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

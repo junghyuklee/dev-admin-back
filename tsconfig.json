@@ -7,14 +7,12 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES6",
+    "strict": true /* 모든 엄격한 타입-체킹 옵션 활성화 여부 */,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": true,
-    "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   }
