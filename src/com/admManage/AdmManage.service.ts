@@ -1,13 +1,14 @@
+import { AdmUser } from 'src/com/admUser/entities/AdmUser.entity';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdmGroup } from '../admGroup/entities/AdmGroup.entity';
 import { AdmGroupMember } from '../admGroupMember/entities/AdmGroupMember.entity';
-import { AdmUser } from '../admUser/entities/AdmUser.entity';
-import { AdmFile } from './../admFile/entities/AdmFile.entity';
+import { AdmFile } from '../admFile/entities/AdmFile.entity';
 import { AdmFileAuth } from './../admFileAuth/entities/AdmFileAuth.entity';
 import { AdmManageDto } from './dto/AdmManage.dto';
+import { from } from 'rxjs';
 
 @Injectable()
 export class AdmManageService {
@@ -34,33 +35,34 @@ export class AdmManageService {
       .createQueryBuilder()
       .subQuery()
       .select([
-        'AdmUser.user_key AS "user_key"',
+        'user.user_key AS "user_key"',
         'group_concat(groupMember.parent_key) AS "group_key_list"',
       ])
+      .from(AdmUser, 'user')
       .leftJoin(
         AdmGroupMember,
         'groupMember',
-        'AdmUser.user_id = groupMember.child_key',
+        'user.user_id = groupMember.child_key',
       )
       .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
       .where('group.use_yn = "Y"')
-      .andWhere('AdmUser.use_yn = "Y"')
-      .groupBy('AdmUser.user_key')
+      .andWhere('user.use_yn = "Y"')
+      .groupBy('user.user_key')
       .getQuery();
 
     return await this.admUserManageRepository
-      .createQueryBuilder()
+      .createQueryBuilder('user')
       .select([
-        'AdmUser.user_id AS "user_id"',
-        'AdmUser.user_name AS "user_name"',
-        'AdmUser.user_password AS "user_password"',
-        'AdmUser.user_login_fail_cnt AS "user_login_fail_cnt"',
-        'AdmUser.user_admin_flag AS "user_admin_flag"',
-        'AdmUser.use_yn AS "use_yn"',
+        'user.user_id AS "user_id"',
+        'user.user_name AS "user_name"',
+        'user.user_password AS "user_password"',
+        'user.user_login_fail_cnt AS "user_login_fail_cnt"',
+        'user.user_admin_flag AS "user_admin_flag"',
+        'user.use_yn AS "use_yn"',
         'group.group_key_list AS "group_key_list"',
       ])
-      .leftJoin(getUserGroupsList, 'group', 'AdmUser.user_key = group.user_key')
-      .where('AdmUser.user_id = :user_id', { user_id: `${user_id}` })
+      .leftJoin(getUserGroupsList, 'group', 'user.user_key = group.user_key')
+      .where('user.user_id = :user_id', { user_id: `${user_id}` })
       .getRawOne();
   }
 
@@ -75,13 +77,11 @@ export class AdmManageService {
       : user_idnm;
     return await this.admUserManageRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.AdmGroupMember', 'groupMember')
-      .leftJoinAndSelect('user.AdmGroup', 'group')
       .select([
         'user.user_key AS "user_key"',
         'user.user_id AS "user_id"',
         'user.user_password AS "user_password"',
-        'DATE_FORMAT(user.password_chg_date,"%Y-%m-%d") AS "password_chg_date"',
+        'DATE_FORMAT(user.user_password_chg_date,"%Y-%m-%d") AS "user_password_chg_date"',
         'user.user_name AS "user_name"',
         'user.user_login_fail_cnt AS "user_login_fail_cnt"',
         'user.user_admin_flag AS "user_admin_flag"',
@@ -93,11 +93,15 @@ export class AdmManageService {
         'user.update_user_id AS "update_user_id"',
         'groupMember.parent_key AS "group_key"',
         'group.group_id AS "group_id"',
-        'group.group_nm AS "group_nm"',
+        'group.group_name AS "group_name"',
       ])
-      .where('user.user_id = groupMember.child_key')
-      .andWhere('group.group_key = groupMember.parent_key')
-      .andWhere('group.use_yn = "Y"')
+      .leftJoin(
+        AdmGroupMember,
+        'groupMember',
+        'user.user_id = groupMember.child_key',
+      )
+      .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
+      .where('group.use_yn = "Y"')
       .andWhere('user_id like :user_id', { user_id: `%${user_idnm}%` })
       .orWhere('user_name like :user_name', { user_name: `%${user_idnm}%` })
       .addOrderBy('user_id', 'ASC')
@@ -112,11 +116,11 @@ export class AdmManageService {
   async searchGroupMembers(group_id: string): Promise<AdmManageDto[]> {
     if (group_id) {
       const groupMemberGroup = this.admGroupManageRepository
-        .createQueryBuilder()
+        .createQueryBuilder('group')
         .select([
-          'AdmGroup.group_key AS "parent_key"',
-          'AdmGroup.group_id AS "parent_id"',
-          'AdmGroup.group_name AS "parent_name"',
+          'group.group_key AS "parent_key"',
+          'group.group_id AS "parent_id"',
+          'group.group_name AS "parent_name"',
           'groupMember.child_key AS "child_key"',
           'childGroup.group_id AS "child_id"',
           'childGroup.group_name AS "child_name"',
@@ -124,24 +128,24 @@ export class AdmManageService {
         .leftJoin(
           AdmGroupMember,
           'groupMember',
-          'AdmGroup.group_key = groupMember.parent_key',
+          'group.group_key = groupMember.parent_key',
         )
         .leftJoin(
           AdmGroup,
           'childGroup',
           'groupMember.child_key = childGroup.group_key',
         )
-        .where('AdmGroup.group_id = :group_id', { group_id: `${group_id}` })
+        .where('group.group_id = :group_id', { group_id: `${group_id}` })
         .andWhere('groupMember.child_internal_div_cd = "G0"')
         .orderBy('childGroup.group_id')
         .getRawMany();
 
       const groupMemberUser = this.admGroupManageRepository
-        .createQueryBuilder()
+        .createQueryBuilder('group')
         .select([
-          'AdmGroup.group_key AS "parent_key"',
-          'AdmGroup.group_id AS "parent_id"',
-          'AdmGroup.group_name AS "parent_name"',
+          'group.group_key AS "parent_key"',
+          'group.group_id AS "parent_id"',
+          'group.group_name AS "parent_name"',
           'groupMember.child_key AS "child_key"',
           'childUser.user_id AS "child_id"',
           'childUser.user_name AS "child_name"',
@@ -149,14 +153,14 @@ export class AdmManageService {
         .leftJoin(
           AdmGroupMember,
           'groupMember',
-          'AdmGroup.group_key = groupMember.parent_key',
+          'group.group_key = groupMember.parent_key',
         )
         .leftJoin(
           AdmUser,
           'childUser',
           'groupMember.child_key = childUser.user_key',
         )
-        .where('AdmGroup.group_id = :group_id', { group_id: `${group_id}` })
+        .where('group.group_id = :group_id', { group_id: `${group_id}` })
         .andWhere('groupMember.child_internal_div_cd = "U0"')
         .orderBy('childUser.user_id')
         .getRawMany();

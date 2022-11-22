@@ -1,5 +1,4 @@
 import { AdmFileAuthModule } from './com/admFileAuth/AdmFileAuth.module';
-import { AdmFile } from './com/admFile/entities/AdmFile.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
