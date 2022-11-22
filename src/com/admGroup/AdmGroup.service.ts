@@ -52,7 +52,6 @@ export class AdmGroupService {
         'group_key',
         'group_id',
         'group_name',
-        'DATE_FORMAT(password_chg_date,"%Y-%m-%d") AS "password_chg_date"',
         'use_yn',
         'DATE_FORMAT(created_at,"%Y-%m-%d") AS "created_date"',
         'create_user_id',
