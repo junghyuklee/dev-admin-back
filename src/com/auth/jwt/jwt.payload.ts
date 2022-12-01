@@ -1,6 +1,4 @@
 export type Payload = {
+  user_key: string;
   user_id: string;
-  user_name: string;
-  user_admin_flag: string;
-  group_key: string;
 };

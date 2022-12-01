@@ -1,18 +1,20 @@
-import { Body, Controller, Delete, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmFileAuthService } from './AdmFileAuth.service';
 import { AdmFileAuthDto } from './dto/AdmFileAuth.dto';
 
 @Controller('fileAuth')
 export class AdmFileAuthController {
   constructor(readonly admFileAuthService: AdmFileAuthService) {}
-  // @UseGuards(JwtAuthGuard)
+
   @Post('/createFileAuth')
+  @UseGuards(AuthGuard)
   createFileAuth(@Body() fileAuthDataList: AdmFileAuthDto[]) {
     return this.admFileAuthService.createFileAuth(fileAuthDataList);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Delete('/deleteFileAuth')
+  @UseGuards(AuthGuard)
   deleteFileAuth(@Body() fileAuthDataList: AdmFileAuthDto[]) {
     return this.admFileAuthService.deleteFileAuth(fileAuthDataList);
   }

@@ -1,31 +1,29 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guard/jwt.guard';
-import { AdmManageDto } from './dto/AdmManage.dto';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmManageService } from './AdmManage.service';
-import { AdmGroupMemberDto } from '../admGroupMember/dto/AdmGroupMember.dto';
+import { AdmManageDto } from './dto/AdmManage.dto';
 
 @Controller('manage')
 export class AdmManageController {
   constructor(readonly admManageService: AdmManageService) {}
 
-  // @UseGuards(JwtAuthGuard)
   @Get('/searchUsers')
+  @UseGuards(AuthGuard)
   searchUsers(@Query('user_idnm') user_idnm: string): Promise<AdmManageDto[]> {
     return this.admManageService.searchUsers(user_idnm);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('/searchGroupMembers')
+  @UseGuards(AuthGuard)
   searchGroupMembers(
     @Query('group_id') group_id: string,
   ): Promise<AdmManageDto[]> {
     return this.admManageService.searchGroupMembers(group_id);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get('/searchFileAuth')
+  @UseGuards(AuthGuard)
   searchFileAuths(@Query('file_id') file_id: string): Promise<AdmManageDto[]> {
-    console.log(file_id);
     return this.admManageService.searchFileAuths(file_id);
   }
 }

@@ -8,8 +8,8 @@ import { AdmUser } from '../admUser/entities/AdmUser.entity';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './jwt/jwt.constants';
 import { JwtStrategy } from './stategy/jwt.strategy';
-import { LocalStrategy } from './stategy/local.strategy';
 import { AuthController } from './auth.controller';
+import { AdmUserModule } from '../admUser/AdmUser.module';
 
 @Module({
   imports: [
@@ -17,13 +17,14 @@ import { AuthController } from './auth.controller';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '600s' },
+      signOptions: { expiresIn: '18000s' },
     }),
     PassWordModule,
     AdmManageModule,
+    AdmUserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

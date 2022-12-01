@@ -8,7 +8,6 @@ import { AdmGroupMember } from '../admGroupMember/entities/AdmGroupMember.entity
 import { AdmFile } from '../admFile/entities/AdmFile.entity';
 import { AdmFileAuth } from './../admFileAuth/entities/AdmFileAuth.entity';
 import { AdmManageDto } from './dto/AdmManage.dto';
-import { from } from 'rxjs';
 
 @Injectable()
 export class AdmManageService {
@@ -23,46 +22,22 @@ export class AdmManageService {
     private admFileManageRepository: Repository<AdmFile>,
   ) {}
   /**
-   * login_user 토큰 생성용 단일 조회
+   * login_user 토큰 생성용 조회
    * @param user_id
    * @returns user_id, user_password
    */
   async getUserLogin(user_id?: string): Promise<AdmManageDto | undefined> {
-    /**
-     * 사용자 별 그룹 리스트 조회 subquery
-     */
-    const getUserGroupsList = this.admUserManageRepository
-      .createQueryBuilder()
-      .subQuery()
-      .select([
-        'user.user_key AS "user_key"',
-        'group_concat(groupMember.parent_key) AS "group_key_list"',
-      ])
-      .from(AdmUser, 'user')
-      .leftJoin(
-        AdmGroupMember,
-        'groupMember',
-        'user.user_id = groupMember.child_key',
-      )
-      .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
-      .where('group.use_yn = "Y"')
-      .andWhere('user.use_yn = "Y"')
-      .groupBy('user.user_key')
-      .getQuery();
-
     return await this.admUserManageRepository
       .createQueryBuilder('user')
       .select([
+        'user.user_key AS "user_key"',
         'user.user_id AS "user_id"',
-        'user.user_name AS "user_name"',
         'user.user_password AS "user_password"',
         'user.user_login_fail_cnt AS "user_login_fail_cnt"',
         'user.user_admin_flag AS "user_admin_flag"',
-        'user.use_yn AS "use_yn"',
-        'group.group_key_list AS "group_key_list"',
       ])
-      .leftJoin(getUserGroupsList, 'group', 'user.user_key = group.user_key')
       .where('user.user_id = :user_id', { user_id: `${user_id}` })
+      .andWhere('user.use_yn = "Y"')
       .getRawOne();
   }
 
@@ -75,8 +50,33 @@ export class AdmManageService {
     user_idnm === undefined || user_idnm === null
       ? (user_idnm = '')
       : user_idnm;
+
+    /**
+     * 사용자 별 그룹 리스트 조회 subquery
+     */
+    const getUserGroupsList = this.admUserManageRepository
+      .createQueryBuilder()
+      .subQuery()
+      .select([
+        'user.user_key AS "user_key"',
+        // 'group_concat(groupMember.parent_key) AS "group_key_list"',
+        'group_concat(group.group_name) AS "group_name_list"',
+      ])
+      .from(AdmUser, 'user')
+      .leftJoin(
+        AdmGroupMember,
+        'groupMember',
+        'user.user_key = groupMember.child_key',
+      )
+      .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
+      .where('group.use_yn = "Y"')
+      .andWhere('user.use_yn = "Y"')
+      .groupBy('user.user_key')
+      .getQuery();
+
     return await this.admUserManageRepository
       .createQueryBuilder('user')
+      .distinct()
       .select([
         'user.user_key AS "user_key"',
         'user.user_id AS "user_id"',
@@ -91,20 +91,25 @@ export class AdmManageService {
         'user.create_user_id AS "create_user_id"',
         'DATE_FORMAT(user.updated_at,"%Y-%m-%d") AS "updated_dt"',
         'user.update_user_id AS "update_user_id"',
-        'groupMember.parent_key AS "group_key"',
-        'group.group_id AS "group_id"',
-        'group.group_name AS "group_name"',
+        'userGroup.group_name_list AS "group_name_list"',
       ])
       .leftJoin(
         AdmGroupMember,
         'groupMember',
-        'user.user_id = groupMember.child_key',
+        'user.user_key = groupMember.child_key',
       )
       .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
+      .leftJoin(
+        getUserGroupsList,
+        'userGroup',
+        'user.user_key = userGroup.user_key',
+      )
       .where('group.use_yn = "Y"')
-      .andWhere('user_id like :user_id', { user_id: `%${user_idnm}%` })
-      .orWhere('user_name like :user_name', { user_name: `%${user_idnm}%` })
-      .addOrderBy('user_id', 'ASC')
+      .andWhere('user.user_id like :user_id', { user_id: `%${user_idnm}%` })
+      .orWhere('user.user_name like :user_name', {
+        user_name: `%${user_idnm}%`,
+      })
+      .addOrderBy('user.user_id', 'ASC')
       .getRawMany();
   }
 

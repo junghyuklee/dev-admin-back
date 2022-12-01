@@ -7,7 +7,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guard/jwt.guard';
+import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmGroupDto } from './dto/AdmGroup.dto';
 import { AdmGroup } from './entities/AdmGroup.entity';
 import { AdmGroupService } from './AdmGroup.service';
@@ -16,14 +16,14 @@ import { AdmGroupService } from './AdmGroup.service';
 export class AdmGroupController {
   constructor(readonly admGroupService: AdmGroupService) {}
 
-  // @UseGuards(JwtAuthGuard)
   @Get('/searchGroups')
+  @UseGuards(AuthGuard)
   searchGroups(@Query('user_idnm') user_idnm: string): Promise<AdmGroup[]> {
     return this.admGroupService.searchGroups(user_idnm);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Post('/createGroup')
+  @UseGuards(AuthGuard)
   createGroup(@Body() groupData: AdmGroupDto) {
     return this.admGroupService.createGroup(groupData);
   }

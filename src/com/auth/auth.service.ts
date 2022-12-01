@@ -1,3 +1,4 @@
+import { AdmUserService } from './../admUser/AdmUser.service';
 import { Payload } from './jwt/jwt.payload';
 import {
   BadRequestException,
@@ -5,18 +6,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PassWordService } from '../passWord/PassWord.service';
 import { AdmManageService } from '../admManage/AdmManage.service';
 import { AdmManageDto } from '../admManage/dto/AdmManage.dto';
+import { user } from '../interface/user';
+import { PassWordService } from '../passWord/PassWord.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-
     private readonly passwordService: PassWordService,
-
     private readonly admManageService: AdmManageService,
+    private readonly admUserService: AdmUserService,
   ) {}
 
   /**
@@ -35,6 +36,7 @@ export class AuthService {
         plainTextPassword,
         admUser.user_password,
       );
+
       if (passwordValid) {
         return admUser;
       } else {
@@ -51,27 +53,47 @@ export class AuthService {
    * @param user_password
    * @returns jwt 토큰
    */
-  async login(loginData: any): Promise<{ accessToken: string }> {
+  async login(
+    loginData: any,
+  ): Promise<{ accessToken: string; userInfo: user; message: string }> {
     const userData = await this.validateUser(
       loginData.user_id,
       loginData.user_password,
     );
-    const payload: Payload = {
+    let accessToken = '';
+    let message = '';
+    let userInfo: user = {
+      user_key: '',
       user_id: '',
-      user_name: '',
-      user_admin_flag: '',
-      group_key: '',
+      user_login_fail_cnt: 0,
     };
+
     if (userData) {
-      payload.user_id = userData.user_id ? userData.user_id : '';
-      payload.user_name = userData.user_name ? userData.user_name : '';
-      payload.user_admin_flag = userData.user_admin_flag
-        ? userData.user_admin_flag
-        : '';
-      payload.group_key = userData.group_key ? userData.group_key : '';
+      userData.user_key
+        ? (userInfo.user_key = userData.user_key)
+        : userInfo.user_key;
+      userData.user_id
+        ? (userInfo.user_id = userData.user_id)
+        : userInfo.user_id;
+      userData.user_login_fail_cnt
+        ? (userInfo.user_login_fail_cnt = userData.user_login_fail_cnt)
+        : userInfo.user_login_fail_cnt;
     }
+    accessToken = this.jwtService.sign(userInfo);
+
+    if (userInfo.user_login_fail_cnt > 10) {
+      throw new BadRequestException('비밀번호 오류 횟수를 초과 하였습니다.');
+    }
+
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken,
+      userInfo,
+      message,
     };
+  }
+
+  /* 토큰 체크 */
+  async tokenValidateUser(payload: Payload): Promise<AdmManageDto | undefined> {
+    return await this.admUserService.getOneUserKeyCheck(payload.user_key);
   }
 }
