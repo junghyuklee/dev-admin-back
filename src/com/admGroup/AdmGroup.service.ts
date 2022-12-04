@@ -52,6 +52,7 @@ export class AdmGroupService {
         'group_key',
         'group_id',
         'group_name',
+        'group_desc',
         'use_yn',
         'DATE_FORMAT(created_at,"%Y-%m-%d") AS "created_date"',
         'create_user_id',

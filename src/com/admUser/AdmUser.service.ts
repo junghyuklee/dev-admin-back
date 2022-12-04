@@ -40,6 +40,26 @@ export class AdmUserService {
   }
 
   /**
+   * user_info 단일 조회
+   * @param user_key
+   * @returns user_info
+   */
+  async selectUser(user_key?: string): Promise<AdmUser | undefined> {
+    return await this.admUserRepository
+      .createQueryBuilder()
+      .select([
+        'user_key',
+        'user_id',
+        'user_name',
+        'user_desc',
+        'user_admin_flag',
+        'use_yn',
+      ])
+      .where('user_key = :user_key', { user_key: `${user_key}` })
+      .getRawOne();
+  }
+
+  /**
    * 유저 생성
    * @param userData
    * @returns
