@@ -72,9 +72,9 @@ export class AdmGroupService {
    */
   async createGroup(groupData: AdmGroupDto) {
     if (!(await this.getOneGroupIdCheck(groupData.group_id))) {
-      await this.admGroupRepository.save(groupData);
+      return await this.admGroupRepository.save(groupData);
     } else {
-      const error = { group_id: '이미 사용중인 아이디 입니다.' };
+      const error = { message: '이미 사용중인 아이디 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
@@ -89,14 +89,14 @@ export class AdmGroupService {
    */
   async updateGroup(groupData: AdmGroupDto) {
     if (await this.getOneGroupIdCheck(groupData.group_id)) {
-      await this.admGroupRepository.update(
+      return await this.admGroupRepository.update(
         {
           group_key: groupData.group_key,
         },
         groupData,
       );
     } else {
-      const error = { user_key: '등록되지 않은 그룹 입니다.' };
+      const error = { message: '등록되지 않은 그룹 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,

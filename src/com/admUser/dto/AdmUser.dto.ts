@@ -14,10 +14,10 @@ import {
 } from 'class-validator-password-check';
 
 const passwordRequirement: PasswordValidationRequirement = {
-  mustContainLowerLetter: false, //소문자 포함 강제
-  mustContainNumber: false, //숫자 포함 강제
+  mustContainLowerLetter: true, //소문자 포함 강제
+  mustContainNumber: true, //숫자 포함 강제
   mustContainSpecialCharacter: true, //특수기호 포함 강제
-  mustContainUpperLetter: true, //대문자 포함 강제
+  mustContainUpperLetter: false, //대문자 포함 강제
 };
 
 export class AdmUserDto {

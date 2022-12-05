@@ -186,7 +186,6 @@ export class AdmManageService {
    * @returns 유저 또는 그룹 정보(복수)
    */
   async searchFileAuths(file_id: string): Promise<AdmManageDto[]> {
-    console.log(file_id);
     if (file_id) {
       const fileAuthGroup = this.admFileManageRepository
         .createQueryBuilder()

@@ -42,10 +42,10 @@ export class AdmFileAuthService {
           fileAuthData.auth_key,
         ))
       ) {
-        await this.admFileAuthRepository.save(fileAuthData);
+        return await this.admFileAuthRepository.save(fileAuthData);
       } else {
         const error = {
-          child_key: '이미 권한이 있는 사용자 또는 그룹 입니다.',
+          message: '이미 권한이 있는 사용자 또는 그룹 입니다.',
         };
         throw new HttpException(
           { message: 'Input data validation failed', error },
@@ -68,12 +68,12 @@ export class AdmFileAuthService {
           fileAuthData.auth_key,
         )
       ) {
-        await this.admFileAuthRepository.delete({
+        return await this.admFileAuthRepository.delete({
           file_key: fileAuthData.file_key,
           auth_key: fileAuthData.auth_key,
         });
       } else {
-        const error = { child_key: '권한이 없는 사용자 또는 그룹 입니다.' };
+        const error = { message: '권한이 없는 사용자 또는 그룹 입니다.' };
         throw new HttpException(
           { message: 'Input data validation failed', error },
           HttpStatus.BAD_REQUEST,

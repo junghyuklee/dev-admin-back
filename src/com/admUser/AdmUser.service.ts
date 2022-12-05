@@ -71,9 +71,9 @@ export class AdmUserService {
           userData.user_password,
         );
       }
-      await this.admUserRepository.save(userData);
+      return await this.admUserRepository.save(userData);
     } else {
-      const error = { user_id: '이미 사용중인 아이디 입니다.' };
+      const error = { message: '이미 사용중인 아이디 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
@@ -88,19 +88,19 @@ export class AdmUserService {
    */
   async updateUser(userData: AdmUserDto) {
     if (await this.getOneUserIdCheck(userData.user_id)) {
-      if (userData.user_password != undefined) {
+      if (userData.user_password !== undefined) {
         userData.user_password = await this.passwordService.hashPassword(
           userData.user_password,
         );
       }
-      await this.admUserRepository.update(
+      return await this.admUserRepository.update(
         {
-          user_id: userData.user_id,
+          user_key: userData.user_key,
         },
         userData,
       );
     } else {
-      const error = { user_id: '등록되지 않은 사용자 입니다.' };
+      const error = { message: '등록되지 않은 사용자 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,

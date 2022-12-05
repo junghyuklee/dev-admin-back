@@ -42,9 +42,9 @@ export class AdmGroupMemberService {
           groupMemberData.child_key,
         ))
       ) {
-        await this.admGroupMemberRepository.save(groupMemberData);
+        return await this.admGroupMemberRepository.save(groupMemberData);
       } else {
-        const error = { child_key: '이미 등록 되어있는 멤버 입니다.' };
+        const error = { message: '이미 등록 되어있는 멤버 입니다.' };
         throw new HttpException(
           { message: 'Input data validation failed', error },
           HttpStatus.BAD_REQUEST,
@@ -66,12 +66,12 @@ export class AdmGroupMemberService {
           groupMemberData.child_key,
         )
       ) {
-        await this.admGroupMemberRepository.delete({
+        return await this.admGroupMemberRepository.delete({
           parent_key: groupMemberData.parent_key,
           child_key: groupMemberData.child_key,
         });
       } else {
-        const error = { child_key: '등록되지 않은 멤버 입니다.' };
+        const error = { message: '등록되지 않은 멤버 입니다.' };
         throw new HttpException(
           { message: 'Input data validation failed', error },
           HttpStatus.BAD_REQUEST,

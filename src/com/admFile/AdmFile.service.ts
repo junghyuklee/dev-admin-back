@@ -74,9 +74,9 @@ export class AdmFileService {
    */
   async createFile(fileData: AdmFileDto) {
     if (!(await this.getOneFileIdCheck(fileData.file_id))) {
-      await this.admFileRepository.save(fileData);
+      return await this.admFileRepository.save(fileData);
     } else {
-      const error = { file_id: '이미 사용중인 아이디 입니다.' };
+      const error = { message: '이미 사용중인 아이디 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
@@ -92,14 +92,14 @@ export class AdmFileService {
   async updateFile(fileData: AdmFileDto) {
     const updateFileKey = await this.getOneFileIdCheck(fileData.file_id);
     if (updateFileKey) {
-      await this.admFileRepository.update(
+      return await this.admFileRepository.update(
         {
           file_key: updateFileKey.file_key,
         },
         fileData,
       );
     } else {
-      const error = { file_key: '등록되지 않은 파일 입니다.' };
+      const error = { message: '등록되지 않은 파일 입니다.' };
       throw new HttpException(
         { message: 'Input data validation failed', error },
         HttpStatus.BAD_REQUEST,
