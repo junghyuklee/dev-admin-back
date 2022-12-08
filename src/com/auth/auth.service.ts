@@ -30,7 +30,7 @@ export class AuthService {
     user_id: string,
     plainTextPassword: string,
   ): Promise<AdmManageDto | undefined> {
-    const admUser = await this.admManageService.getUserLogin(user_id);
+    const admUser = await this.admManageService.getLoginUserInfo(user_id);
     if (admUser !== undefined && admUser.user_password !== undefined) {
       const passwordValid = await this.passwordService.validatePassword(
         plainTextPassword,

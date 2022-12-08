@@ -62,6 +62,7 @@ export class AdmGroupService {
   async updateGroup(groupData: AdmGroupDto) {
     if (groupData && groupData.group_id) {
       if (await this.getOneGroupIdCheck(groupData.group_id)) {
+        /* Type-ORM 기본제공 update */
         return await this.admGroupRepository.update(
           {
             group_key: groupData.group_key,
