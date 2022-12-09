@@ -5,11 +5,12 @@ import { AdmGroup } from './../admGroup/entities/AdmGroup.entity';
 import { AdmFile } from './../admFile/entities/AdmFile.entity';
 import { AdmManageController } from './AdmManage.controller';
 import { AdmManageService } from './AdmManage.service';
+import { AdmManageRepository } from './AdmManage.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AdmUser, AdmGroup, AdmFile])],
   controllers: [AdmManageController],
-  providers: [AdmManageService],
+  providers: [AdmManageService, AdmManageRepository],
   exports: [AdmManageService],
 })
 export class AdmManageModule {}
