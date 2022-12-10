@@ -40,8 +40,9 @@ export class AdmGroupMemberService {
             groupMemberData.child_key,
           )
         ) {
-          /* Type-ORM 기본제공 save */
-          return await this.admGroupMemberRepository.save(groupMemberData);
+          return await this.admGroupMemberRepository.createGroupMember(
+            groupMemberData,
+          );
         } else {
           const error = { message: '이미 등록 되어있는 멤버 입니다.' };
           throw new HttpException(
@@ -71,8 +72,9 @@ export class AdmGroupMemberService {
             groupMemberData.child_key,
           )
         ) {
-          /* Type-ORM 기본제공 delete */
-          return await this.admGroupMemberRepository.delete(groupMemberData);
+          return await this.admGroupMemberRepository.deleteGroupMember(
+            groupMemberData,
+          );
         } else {
           const error = { message: '등록되지 않은 멤버 입니다.' };
           throw new HttpException(

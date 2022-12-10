@@ -36,8 +36,7 @@ export class AdmFileAuthService {
             fileAuthData.auth_key,
           )
         ) {
-          /* Type-ORM 기본제공 save */
-          return await this.admFileAuthRepository.save(fileAuthData);
+          return await this.admFileAuthRepository.createFileAuth(fileAuthData);
         }
       } else {
         const error = {
@@ -53,7 +52,7 @@ export class AdmFileAuthService {
 
   /**
    * 권한 멤버 제거
-   * @param groupMemberData
+   * @param fileAuthDataList
    * @returns Boolean
    */
   async deleteFileAuth(fileAuthDataList: AdmFileAuthDto[]) {
@@ -65,7 +64,7 @@ export class AdmFileAuthService {
             fileAuthData.auth_key,
           )
         ) {
-          return await this.admFileAuthRepository.delete(fileAuthData);
+          return await this.admFileAuthRepository.deleteFileAuth(fileAuthData);
         }
       } else {
         const error = { message: '권한이 없는 사용자 또는 그룹 입니다.' };

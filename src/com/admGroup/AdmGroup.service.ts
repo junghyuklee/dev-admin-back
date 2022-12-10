@@ -26,6 +26,15 @@ export class AdmGroupService {
   }
 
   /**
+   * group_info 단일 조회(Detail 화면)
+   * @param group_key
+   * @returns group_info
+   */
+  async selectGroup(group_key: string): Promise<AdmGroup | undefined> {
+    return await this.admGroupRepository.selectGroup(group_key);
+  }
+
+  /**
    * 그룹 테이블 group_id or group_name like 검색
    * @param group_idnm
    * @returns 유저 정보(복수)
@@ -42,8 +51,7 @@ export class AdmGroupService {
   async createGroup(groupData: AdmGroupDto) {
     if (groupData && groupData.group_id) {
       if (await this.getOneGroupIdCheck(groupData.group_id)) {
-        /* Type-ORM 기본제공 save */
-        return await this.admGroupRepository.save(groupData);
+        return await this.admGroupRepository.createGroup(groupData);
       } else {
         const error = { message: '이미 사용중인 아이디 입니다.' };
         throw new HttpException(
@@ -62,13 +70,7 @@ export class AdmGroupService {
   async updateGroup(groupData: AdmGroupDto) {
     if (groupData && groupData.group_id) {
       if (await this.getOneGroupIdCheck(groupData.group_id)) {
-        /* Type-ORM 기본제공 update */
-        return await this.admGroupRepository.update(
-          {
-            group_key: groupData.group_key,
-          },
-          groupData,
-        );
+        return await this.admGroupRepository.updateGroup(groupData);
       } else {
         const error = { message: '등록되지 않은 그룹 입니다.' };
         throw new HttpException(

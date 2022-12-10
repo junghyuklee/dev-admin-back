@@ -20,7 +20,7 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainUpperLetter: false, //대문자 포함 강제
 };
 
-export class AdmUserDto {
+export class AdmUserCreateDto {
   @IsOptional()
   @MaxLength(100)
   readonly user_key?: string;

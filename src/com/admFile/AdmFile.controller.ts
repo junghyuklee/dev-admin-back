@@ -16,6 +16,14 @@ import { AdmFile } from './entities/AdmFile.entity';
 export class AdmFileController {
   constructor(readonly admFileService: AdmFileService) {}
 
+  @Get('/selectFile')
+  @UseGuards(AuthGuard)
+  selectFile(
+    @Query('file_key') file_key: string,
+  ): Promise<AdmFileDto | undefined> {
+    return this.admFileService.selectFile(file_key);
+  }
+
   @Get('/searchFiles')
   @UseGuards(AuthGuard)
   searchFiles(@Query('file_idnm') file_idnm: string): Promise<AdmFile[]> {

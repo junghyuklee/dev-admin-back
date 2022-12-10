@@ -1,6 +1,6 @@
-import { AdmUserDto } from 'src/com/admUser/dto/AdmUser.dto';
+import { AdmUserCreateDto } from 'src/com/admUser/dto/AdmUserCreate.dto';
 
-export class AdmManageDto extends AdmUserDto {
+export class AdmManageDto extends AdmUserCreateDto {
   readonly group_key?: string;
   readonly group_id?: string;
   readonly group_name?: string;

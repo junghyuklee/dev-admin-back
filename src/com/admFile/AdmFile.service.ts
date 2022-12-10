@@ -26,6 +26,15 @@ export class AdmFileService {
   }
 
   /**
+   * file_info 단일 조회(Detail 화면)
+   * @param file_key
+   * @returns file_info
+   */
+  async selectFile(file_key: string): Promise<AdmFile | undefined> {
+    return await this.admFileRepository.selectFile(file_key);
+  }
+
+  /**
    * 파일 테이블 file_id or file_name like 검색
    * @param file_idnm
    * @returns 파일 정보(복수)
@@ -42,8 +51,7 @@ export class AdmFileService {
   async createFile(fileData: AdmFileDto) {
     if (fileData && fileData.file_key) {
       if (await this.getOneFileKeyCheck(fileData.file_key)) {
-        /* Type-ORM 기본제공 save */
-        return await this.admFileRepository.save(fileData);
+        return await this.admFileRepository.createFile(fileData);
       }
     } else {
       const error = { message: '이미 사용중인 아이디 입니다.' };
@@ -62,13 +70,7 @@ export class AdmFileService {
   async updateFile(fileData: AdmFileDto) {
     if (fileData && fileData.file_key) {
       if (await this.getOneFileKeyCheck(fileData.file_key)) {
-        /* Type-ORM 기본제공 update */
-        return await this.admFileRepository.update(
-          {
-            file_key: fileData.file_key,
-          },
-          fileData,
-        );
+        return await this.admFileRepository.updateFile(fileData);
       }
     } else {
       const error = { message: '등록되지 않은 파일 입니다.' };
