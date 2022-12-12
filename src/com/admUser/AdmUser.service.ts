@@ -107,4 +107,32 @@ export class AdmUserService {
       );
     }
   }
+
+  /**
+   * 유저 삭제
+   * @param usersKeyList
+   * @returns
+   */
+  async deleteUser(userKeyList: string[]) {
+    if (userKeyList.length > 0) {
+      for (const i in userKeyList) {
+        if (await this.getOneUserKeyCheck(userKeyList[i])) {
+          await this.admUserRepository.deleteUser(userKeyList[i]);
+        } else {
+          const error = { message: '등록되지 않은 사용자 입니다.' };
+          throw new HttpException(
+            { message: 'Input data validation failed', error },
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+      return 200;
+    } else {
+      const error = { message: '삭제하려는 사용자를 선택해주세요.' };
+      throw new HttpException(
+        { message: 'Input data validation failed', error },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

@@ -23,10 +23,13 @@ export class AdmUserUpdatePasswordDto {
   @MaxLength(100)
   readonly user_key?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @MinLength(8)
   @MaxLength(100)
   @Validate(PasswordValidation, [passwordRequirement])
   user_password?: string;
+
+  @IsNotEmpty()
+  user_password_chg_date?: Date;
 }

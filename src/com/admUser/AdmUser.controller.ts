@@ -43,4 +43,10 @@ export class AdmUserController {
   updateUserPassword(@Body() userData: AdmUserUpdatePasswordDto) {
     return this.admUserService.updateUserPassword(userData);
   }
+
+  @Patch('/deleteUser')
+  @UseGuards(AuthGuard)
+  deleteUser(@Body() userKeyList: string[]) {
+    return this.admUserService.deleteUser(userKeyList);
+  }
 }

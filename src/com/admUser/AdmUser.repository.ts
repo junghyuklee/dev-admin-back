@@ -89,12 +89,30 @@ export class AdmUserRepository {
    * @returns
    */
   async updateUserPassword(userData: AdmUserUpdatePasswordDto) {
+    userData.user_password_chg_date = new Date();
     /* Type-ORM 기본제공 update */
     return await this.admUserRepository.update(
       {
         user_key: userData.user_key,
       },
       userData,
+    );
+  }
+
+  /**
+   * 유저 패스워드 수정
+   * @param usersData
+   * @returns
+   */
+  async deleteUser(user_key: string) {
+    /* Type-ORM 기본제공 update */
+    return await this.admUserRepository.update(
+      {
+        user_key: user_key,
+      },
+      {
+        use_yn: 'N',
+      },
     );
   }
 }
