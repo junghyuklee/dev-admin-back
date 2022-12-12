@@ -17,6 +17,9 @@ export class AdmManageRepository {
     @InjectRepository(AdmGroup)
     private admGroupManageRepository: Repository<AdmGroup>,
 
+    @InjectRepository(AdmGroupMember)
+    private admGroupMemberManageRepository: Repository<AdmGroupMember>,
+
     @InjectRepository(AdmFile)
     private admFileManageRepository: Repository<AdmFile>,
   ) {}
@@ -105,6 +108,27 @@ export class AdmManageRepository {
         user_name: `%${user_idnm}%`,
       })
       .addOrderBy('user.user_id', 'ASC')
+      .getRawMany();
+  }
+
+  /**
+   * 사용자별 그룹리스트 검색
+   * @param user_key
+   * @returns 그룹 리스트
+   */
+  async searchUserGroups(user_key: string): Promise<AdmManageDto[]> {
+    return this.admGroupMemberManageRepository
+      .createQueryBuilder('groupMember')
+      .select([
+        'groupMember.parent_key AS "group_key"',
+        'group.group_id AS "group_id"',
+        'group.group_name AS "group_name"',
+        'group.group_desc AS "group_desc"',
+      ])
+      .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
+      .where('groupMember.child_key = :user_key', { user_key: `${user_key}` })
+      .andWhere('groupMember.child_internal_div_cd = "U0"')
+      .orderBy('groupMember.group_id')
       .getRawMany();
   }
 
