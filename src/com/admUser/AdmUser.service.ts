@@ -97,6 +97,7 @@ export class AdmUserService {
             userData.user_password,
           );
         }
+        userData.user_password_chg_date = new Date();
         return await this.admUserRepository.updateUserPassword(userData);
       }
     } else {

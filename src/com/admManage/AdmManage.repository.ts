@@ -68,7 +68,6 @@ export class AdmManageRepository {
       )
       .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
       .where('group.use_yn = "Y"')
-      .andWhere('user.use_yn = "Y"')
       .groupBy('user.user_key')
       .getQuery();
 
@@ -102,11 +101,10 @@ export class AdmManageRepository {
         'userGroup',
         'user.user_key = userGroup.user_key',
       )
-      .where('group.use_yn = "Y"')
-      .andWhere('user.user_id like :user_id', { user_id: `%${user_idnm}%` })
-      .orWhere('user.user_name like :user_name', {
-        user_name: `%${user_idnm}%`,
-      })
+      .where(
+        '(user.user_id like :user_idnm or user.user_name like :user_idnm)',
+        { user_idnm: `%${user_idnm}%` },
+      )
       .addOrderBy('user.user_id', 'ASC')
       .getRawMany();
   }
@@ -116,7 +114,10 @@ export class AdmManageRepository {
    * @param user_key
    * @returns 그룹 리스트
    */
-  async searchUserGroups(user_key: string): Promise<AdmManageDto[]> {
+  async searchUserGroups(
+    user_key: string,
+    group_idnm: string,
+  ): Promise<AdmManageDto[]> {
     return this.admGroupMemberManageRepository
       .createQueryBuilder('groupMember')
       .select([
@@ -127,8 +128,14 @@ export class AdmManageRepository {
       ])
       .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
       .where('groupMember.child_key = :user_key', { user_key: `${user_key}` })
+      .andWhere(
+        '(group.group_id like :group_idnm or group.group_name like :group_idnm)',
+        {
+          group_idnm: `%${group_idnm}%`,
+        },
+      )
       .andWhere('groupMember.child_internal_div_cd = "U0"')
-      .orderBy('groupMember.group_id')
+      .orderBy('group.group_id')
       .getRawMany();
   }
 

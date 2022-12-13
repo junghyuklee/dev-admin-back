@@ -1,6 +1,5 @@
 import {
   IsNotEmpty,
-  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -30,6 +29,5 @@ export class AdmUserUpdatePasswordDto {
   @Validate(PasswordValidation, [passwordRequirement])
   user_password?: string;
 
-  @IsNotEmpty()
   user_password_chg_date?: Date;
 }

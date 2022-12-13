@@ -89,7 +89,7 @@ export class AdmUserRepository {
    * @returns
    */
   async updateUserPassword(userData: AdmUserUpdatePasswordDto) {
-    userData.user_password_chg_date = new Date();
+    console.log(userData);
     /* Type-ORM 기본제공 update */
     return await this.admUserRepository.update(
       {
@@ -100,8 +100,8 @@ export class AdmUserRepository {
   }
 
   /**
-   * 유저 패스워드 수정
-   * @param usersData
+   * 유저 삭제
+   * @param user_key
    * @returns
    */
   async deleteUser(user_key: string) {

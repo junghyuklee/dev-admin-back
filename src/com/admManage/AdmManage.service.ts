@@ -29,8 +29,14 @@ export class AdmManageService {
    * @param user_key
    * @returns 그룹 리스트
    */
-  async searchUserGroups(user_key: string): Promise<AdmManageDto[]> {
-    return await this.admManageRepository.searchUserGroups(user_key);
+  async searchUserGroups(
+    user_key: string,
+    group_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return await this.admManageRepository.searchUserGroups(
+      user_key,
+      group_idnm,
+    );
   }
 
   /**
