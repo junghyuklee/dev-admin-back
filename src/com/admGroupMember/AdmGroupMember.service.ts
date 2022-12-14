@@ -72,7 +72,7 @@ export class AdmGroupMemberService {
             groupMemberData.child_key,
           )
         ) {
-          return await this.admGroupMemberRepository.deleteGroupMember(
+          await this.admGroupMemberRepository.deleteGroupMember(
             groupMemberData,
           );
         } else {
@@ -84,5 +84,6 @@ export class AdmGroupMemberService {
         }
       }
     }
+    return 200;
   }
 }

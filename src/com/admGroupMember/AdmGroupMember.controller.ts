@@ -13,7 +13,7 @@ export class AdmGroupMemberController {
     return this.admGroupMemberService.createGroupMember(groupMemberDataList);
   }
 
-  @Delete('/deleteGroupMember')
+  @Post('/deleteGroupMember')
   @UseGuards(AuthGuard)
   deleteGroupMember(@Body() groupMemberDataList: AdmGroupMemberDto[]) {
     return this.admGroupMemberService.deleteGroupMember(groupMemberDataList);
