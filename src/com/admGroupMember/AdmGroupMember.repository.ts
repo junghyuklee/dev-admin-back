@@ -32,7 +32,7 @@ export class AdmGroupMemberRepository {
    * @param groupMemberDataList
    * @returns Boolean
    */
-  async createGroupMember(groupMemberData: AdmGroupMemberDto) {
+  async addGroupMember(groupMemberData: AdmGroupMemberDto) {
     /* Type-ORM 기본제공 save */
     return await this.admGroupMemberRepository.save(groupMemberData);
   }

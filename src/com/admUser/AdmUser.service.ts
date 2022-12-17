@@ -54,11 +54,10 @@ export class AdmUserService {
         userData.user_password = await this.passwordService.hashPassword(
           userData.user_password,
         );
-        return await this.admUserRepository.createUser(userData);
+        await this.admUserRepository.createUser(userData);
       } else {
-        const error = { message: '이미 사용중인 아이디 입니다.' };
         throw new HttpException(
-          { message: 'Input data validation failed', error },
+          { message: '이미 사용중인 아이디 입니다.' },
           HttpStatus.BAD_REQUEST,
         );
       }

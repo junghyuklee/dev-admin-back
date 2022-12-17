@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmGroupMemberService } from './AdmGroupMember.service';
 import { AdmGroupMemberDto } from './dto/AdmGroupMember.dto';
@@ -7,10 +7,10 @@ import { AdmGroupMemberDto } from './dto/AdmGroupMember.dto';
 export class AdmGroupMemberController {
   constructor(readonly admGroupMemberService: AdmGroupMemberService) {}
 
-  @Post('/createGroupMember')
+  @Post('/addGroupMember')
   @UseGuards(AuthGuard)
-  createGroupMember(@Body() groupMemberDataList: AdmGroupMemberDto[]) {
-    return this.admGroupMemberService.createGroupMember(groupMemberDataList);
+  addGroupMember(@Body() groupMemberDataList: AdmGroupMemberDto[]) {
+    return this.admGroupMemberService.addGroupMember(groupMemberDataList);
   }
 
   @Post('/deleteGroupMember')

@@ -27,7 +27,7 @@ export class AdmGroupMemberService {
    * @param groupMemberDataList
    * @returns Boolean
    */
-  async createGroupMember(groupMemberDataList: AdmGroupMemberDto[]) {
+  async addGroupMember(groupMemberDataList: AdmGroupMemberDto[]) {
     for (let groupMemberData of groupMemberDataList) {
       if (
         groupMemberData &&
@@ -40,7 +40,7 @@ export class AdmGroupMemberService {
             groupMemberData.child_key,
           )
         ) {
-          return await this.admGroupMemberRepository.createGroupMember(
+          return await this.admGroupMemberRepository.addGroupMember(
             groupMemberData,
           );
         } else {
