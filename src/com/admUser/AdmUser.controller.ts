@@ -46,7 +46,7 @@ export class AdmUserController {
 
   @Patch('/deleteUser')
   @UseGuards(AuthGuard)
-  deleteUser(@Body() userKeyList: string[]) {
+  deleteUser(@Body() userKeyList: any[]) {
     return this.admUserService.deleteUser(userKeyList);
   }
 }

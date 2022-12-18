@@ -17,7 +17,6 @@ export class AdmUserUpdateDto {
   internal_div_cd?: string;
 
   @IsOptional()
-  @Matches(/^[a-z0-9_-]*$/)
   @MaxLength(100)
   readonly user_id?: string;
 

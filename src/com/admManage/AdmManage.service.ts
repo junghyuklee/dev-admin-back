@@ -40,6 +40,21 @@ export class AdmManageService {
   }
 
   /**
+   * 사용자별 속하지 않은 그룹리스트 검색
+   * @param user_key
+   * @returns 그룹 리스트
+   */
+  async searchNoneUserGroups(
+    user_key: string,
+    group_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return await this.admManageRepository.searchNoneUserGroups(
+      user_key,
+      group_idnm,
+    );
+  }
+
+  /**
    * Group Member 검색
    * @param group_key
    * @returns 유저 정보(복수)

@@ -17,7 +17,6 @@ export class AdmGroupDto {
   readonly internal_div_cd?: string;
 
   @IsNotEmpty()
-  @Matches(/^[a-z0-9_-]*$/)
   @MaxLength(100)
   readonly group_id?: string;
 

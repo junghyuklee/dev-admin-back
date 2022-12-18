@@ -22,6 +22,15 @@ export class AdmManageController {
     return this.admManageService.searchUserGroups(user_key, group_idnm);
   }
 
+  @Get('/searchNoneUserGroups')
+  @UseGuards(AuthGuard)
+  searchNoneUserGroups(
+    @Query('user_key') user_key: string,
+    @Query('group_idnm') group_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return this.admManageService.searchNoneUserGroups(user_key, group_idnm);
+  }
+
   @Get('/searchGroupMembers')
   @UseGuards(AuthGuard)
   searchGroupMembers(

@@ -89,7 +89,6 @@ export class AdmUserRepository {
    * @returns
    */
   async updateUserPassword(userData: AdmUserUpdatePasswordDto) {
-    console.log(userData);
     /* Type-ORM 기본제공 update */
     return await this.admUserRepository.update(
       {

@@ -50,7 +50,7 @@ export class AdmGroupService {
    */
   async createGroup(groupData: AdmGroupDto) {
     if (groupData && groupData.group_id) {
-      if (await this.getOneGroupIdCheck(groupData.group_id)) {
+      if (!(await this.getOneGroupIdCheck(groupData.group_id))) {
         return await this.admGroupRepository.createGroup(groupData);
       } else {
         const error = { message: '이미 사용중인 아이디 입니다.' };

@@ -140,6 +140,42 @@ export class AdmManageRepository {
   }
 
   /**
+   * 사용자별 속하지 않은 그룹리스트 검색
+   * @param user_key
+   * @returns 그룹 리스트
+   */
+  async searchNoneUserGroups(
+    user_key: string,
+    group_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    const getNoneUserGroupList = this.admGroupMemberManageRepository
+      .createQueryBuilder()
+      .subQuery()
+      .select(['groupMember.parent_key AS "group_key"'])
+      .from(AdmGroupMember, 'groupMember')
+      .where(`groupMember.child_key <> '${user_key}'`)
+      .getQuery();
+
+    return this.admGroupManageRepository
+      .createQueryBuilder('group')
+      .select([
+        'group.group_key AS "group_key"',
+        'group.group_id AS "group_id"',
+        'group.group_name AS "group_name"',
+        'group.group_desc AS "group_desc"',
+      ])
+      .where('group.group_key NOT IN (' + getNoneUserGroupList + ')')
+      .andWhere(
+        '(group.group_id like :group_idnm or group.group_name like :group_idnm)',
+        {
+          group_idnm: `%${group_idnm}%`,
+        },
+      )
+      .orderBy('group.group_id')
+      .getRawMany();
+  }
+
+  /**
    * Group Member 검색(그룹의 멤버 이면서 그룹인)
    * @param group_key
    * @returns 그룹의 멤버 정보

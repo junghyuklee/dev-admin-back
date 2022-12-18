@@ -17,7 +17,7 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainLowerLetter: true, //소문자 포함 강제
   mustContainNumber: true, //숫자 포함 강제
   mustContainSpecialCharacter: true, //특수기호 포함 강제
-  mustContainUpperLetter: false, //대문자 포함 강제
+  mustContainUpperLetter: true, //대문자 포함 강제
 };
 
 export class AdmUserCreateDto {
@@ -30,7 +30,6 @@ export class AdmUserCreateDto {
   internal_div_cd?: string;
 
   @IsNotEmpty()
-  @Matches(/^[a-z0-9_-]*$/)
   @MaxLength(100)
   readonly user_id?: string;
 

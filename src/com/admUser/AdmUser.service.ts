@@ -50,7 +50,7 @@ export class AdmUserService {
    */
   async createUser(userData: AdmUserCreateDto) {
     if (userData && userData.user_id && userData.user_password) {
-      if (await this.getOneUserIdCheck(userData.user_id)) {
+      if (!(await this.getOneUserIdCheck(userData.user_id))) {
         userData.user_password = await this.passwordService.hashPassword(
           userData.user_password,
         );
@@ -113,11 +113,11 @@ export class AdmUserService {
    * @param usersKeyList
    * @returns
    */
-  async deleteUser(userKeyList: string[]) {
+  async deleteUser(userKeyList: any[]) {
     if (userKeyList.length > 0) {
       for (const i in userKeyList) {
-        if (await this.getOneUserKeyCheck(userKeyList[i])) {
-          await this.admUserRepository.deleteUser(userKeyList[i]);
+        if (await this.getOneUserKeyCheck(userKeyList[i].key)) {
+          await this.admUserRepository.deleteUser(userKeyList[i].key);
         } else {
           const error = { message: '등록되지 않은 사용자 입니다.' };
           throw new HttpException(
