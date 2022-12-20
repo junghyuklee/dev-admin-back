@@ -153,7 +153,7 @@ export class AdmManageRepository {
       .subQuery()
       .select(['groupMember.parent_key AS "group_key"'])
       .from(AdmGroupMember, 'groupMember')
-      .where(`groupMember.child_key <> '${user_key}'`)
+      .where(`groupMember.child_key = '${user_key}'`)
       .getQuery();
 
     return this.admGroupManageRepository

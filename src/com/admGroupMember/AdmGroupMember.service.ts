@@ -28,21 +28,21 @@ export class AdmGroupMemberService {
    * @returns Boolean
    */
   async addGroupMember(groupMemberDataList: AdmGroupMemberDto[]) {
+    console.log(groupMemberDataList);
     for (let groupMemberData of groupMemberDataList) {
+      console.log(groupMemberData);
       if (
         groupMemberData &&
         groupMemberData.parent_key &&
         groupMemberData.child_key
       ) {
         if (
-          await this.getOneGroupMemberCheck(
+          !(await this.getOneGroupMemberCheck(
             groupMemberData.parent_key,
             groupMemberData.child_key,
-          )
+          ))
         ) {
-          return await this.admGroupMemberRepository.addGroupMember(
-            groupMemberData,
-          );
+          await this.admGroupMemberRepository.addGroupMember(groupMemberData);
         } else {
           const error = { message: '이미 등록 되어있는 멤버 입니다.' };
           throw new HttpException(
@@ -51,6 +51,7 @@ export class AdmGroupMemberService {
           );
         }
       }
+      return 202021;
     }
   }
 
@@ -60,6 +61,7 @@ export class AdmGroupMemberService {
    * @returns Boolean
    */
   async deleteGroupMember(groupMemberDataList: AdmGroupMemberDto[]) {
+    console.log(groupMemberDataList);
     for (let groupMemberData of groupMemberDataList) {
       if (
         groupMemberData &&
@@ -84,6 +86,6 @@ export class AdmGroupMemberService {
         }
       }
     }
-    return 200;
+    return 201;
   }
 }
