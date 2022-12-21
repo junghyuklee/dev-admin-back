@@ -28,9 +28,7 @@ export class AdmGroupMemberService {
    * @returns Boolean
    */
   async addGroupMember(groupMemberDataList: AdmGroupMemberDto[]) {
-    console.log(groupMemberDataList);
     for (let groupMemberData of groupMemberDataList) {
-      console.log(groupMemberData);
       if (
         groupMemberData &&
         groupMemberData.parent_key &&
@@ -51,8 +49,8 @@ export class AdmGroupMemberService {
           );
         }
       }
-      return 202021;
     }
+    return;
   }
 
   /**

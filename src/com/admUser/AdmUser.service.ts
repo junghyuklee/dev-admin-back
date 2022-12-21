@@ -44,11 +44,16 @@ export class AdmUserService {
   }
 
   /**
-   * 유저 생성
+   * 유저 생성 <표준 입니다>
    * @param userData
    * @returns
    */
   async createUser(userData: AdmUserCreateDto) {
+    const notify = {
+      message: '사용자 신규등록 완료',
+    };
+    let result = 0;
+
     if (userData && userData.user_id && userData.user_password) {
       if (!(await this.getOneUserIdCheck(userData.user_id))) {
         userData.user_password = await this.passwordService.hashPassword(
@@ -56,12 +61,14 @@ export class AdmUserService {
         );
         await this.admUserRepository.createUser(userData);
       } else {
+        const errorNotify = { message: '이미 등록 되어있는 사용자 입니다.' };
         throw new HttpException(
-          { message: '이미 사용중인 아이디 입니다.' },
+          { message: 'message', errorNotify },
           HttpStatus.BAD_REQUEST,
         );
       }
     }
+    return notify;
   }
 
   /**
