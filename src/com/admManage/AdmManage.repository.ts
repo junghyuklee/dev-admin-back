@@ -26,7 +26,7 @@ export class AdmManageRepository {
   /**
    * 토큰 생성용 사용자 정보 조회
    * @param user_id
-   * @returns user_id, user_password
+   * @returns 사용자 정보
    */
   async getLoginUserInfo(user_id?: string): Promise<AdmManageDto | undefined> {
     return await this.admUserManageRepository
@@ -112,6 +112,7 @@ export class AdmManageRepository {
   /**
    * 사용자별 그룹리스트 검색
    * @param user_key
+   * @param group_idnm
    * @returns 그룹 리스트
    */
   async searchUserGroups(
@@ -128,6 +129,7 @@ export class AdmManageRepository {
       ])
       .leftJoin(AdmGroup, 'group', 'groupMember.parent_key = group.group_key')
       .where('groupMember.child_key = :user_key', { user_key: `${user_key}` })
+      .andWhere('group.use_yn = "Y"')
       .andWhere(
         '(group.group_id like :group_idnm or group.group_name like :group_idnm)',
         {
@@ -142,6 +144,7 @@ export class AdmManageRepository {
   /**
    * 사용자별 속하지 않은 그룹리스트 검색
    * @param user_key
+   * @param group_idnm
    * @returns 그룹 리스트
    */
   async searchNoneUserGroups(
@@ -165,6 +168,7 @@ export class AdmManageRepository {
         'group.group_desc AS "group_desc"',
       ])
       .where('group.group_key NOT IN (' + getNoneUserGroupList + ')')
+      .andWhere('group.use_yn = "Y"')
       .andWhere(
         '(group.group_id like :group_idnm or group.group_name like :group_idnm)',
         {
@@ -176,66 +180,157 @@ export class AdmManageRepository {
   }
 
   /**
-   * Group Member 검색(그룹의 멤버 이면서 그룹인)
+   * 그룹별 자식리스트 검색(그룹)
    * @param group_key
-   * @returns 그룹의 멤버 정보
+   * @param member_idnm
+   * @returns 멤버 리스트(그룹)
    */
-  async searchGroupMemberGroup(group_key: string): Promise<AdmManageDto[]> {
-    return this.admGroupManageRepository
-      .createQueryBuilder('group')
+  async searchGroupMembersGroup(
+    group_key: string,
+    member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return this.admGroupMemberManageRepository
+      .createQueryBuilder('groupMember')
       .select([
-        'group.group_key AS "parent_key"',
-        'group.group_id AS "parent_id"',
-        'group.group_name AS "parent_name"',
         'groupMember.child_key AS "child_key"',
-        'childGroup.group_id AS "child_id"',
-        'childGroup.group_name AS "child_name"',
+        'group.group_id AS "child_id"',
+        'group.group_name AS "child_name"',
+        'groupMember.child_internal_div_cd AS "child_internal_div_cd"',
+        '"그룹" AS "child_internal_div_nm"',
+        'group.group_desc AS "child_desc"',
       ])
-      .leftJoin(
-        AdmGroupMember,
-        'groupMember',
-        'group.group_key = groupMember.parent_key',
+      .leftJoin(AdmGroup, 'group', 'groupMember.child_key = group.group_key')
+      .where('groupMember.child_internal_div_cd = "G0"')
+      .andWhere('groupMember.parent_key = :group_key', {
+        group_key: `${group_key}`,
+      })
+      .andWhere('group.use_yn = "Y"')
+      .andWhere(
+        '(group.group_id like :member_idnm or group.group_name like :member_idnm)',
+        {
+          member_idnm: `%${member_idnm}%`,
+        },
       )
-      .leftJoin(
-        AdmGroup,
-        'childGroup',
-        'groupMember.child_key = childGroup.group_key',
-      )
-      .where('group.group_key = :group_key', { group_key: `${group_key}` })
-      .andWhere('groupMember.child_internal_div_cd = "G0"')
-      .orderBy('childGroup.group_id')
+      .orderBy('group.group_id')
       .getRawMany();
   }
 
   /**
-   * Group Member 검색(그룹의 멤버 이면서 유저인)
+   * 그룹별 자식리스트 검색(사용자)
    * @param group_key
-   * @returns 그룹의 멤버 정보
+   * @param member_idnm
+   * @returns 멤버 리스트(사용자)
    */
-  async searchGroupMemberUser(group_key: string): Promise<AdmManageDto[]> {
+  async searchGroupMembersUser(
+    group_key: string,
+    member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return this.admGroupMemberManageRepository
+      .createQueryBuilder('groupMember')
+      .select([
+        'groupMember.child_key AS "child_key"',
+        'user.user_id AS "child_id"',
+        'user.user_name AS "child_name"',
+        'groupMember.child_internal_div_cd AS "child_internal_div_cd"',
+        '"사용자" AS "child_internal_div_nm"',
+        'user.user_desc AS "child_desc"',
+      ])
+      .leftJoin(AdmUser, 'user', 'groupMember.child_key = user.user_key')
+      .where('groupMember.child_internal_div_cd = "U0"')
+      .andWhere('groupMember.parent_key = :group_key', {
+        group_key: `${group_key}`,
+      })
+      .andWhere('user.use_yn = "Y"')
+      .andWhere(
+        '(user.user_id like :member_idnm or user.user_name like :member_idnm)',
+        {
+          member_idnm: `%${member_idnm}%`,
+        },
+      )
+      .orderBy('user.user_id')
+      .getRawMany();
+  }
+
+  /**
+   * 그룹별 속하지 않은 멤버리스트 검색(그룹)
+   * @param group_key
+   * @param member_idnm
+   * @returns 멤버 리스트(그룹)
+   */
+  async searchNoneGroupMembersGroup(
+    group_key: string,
+    member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    const getMemberList = this.admGroupMemberManageRepository
+      .createQueryBuilder()
+      .subQuery()
+      .select(['groupMember.child_key AS "group_key"'])
+      .from(AdmGroupMember, 'groupMember')
+      .where(`groupMember.parent_key = '${group_key}'`)
+      .andWhere('groupMember.child_internal_div_cd = "G0"')
+      .getQuery();
+
     return this.admGroupManageRepository
       .createQueryBuilder('group')
       .select([
-        'group.group_key AS "parent_key"',
-        'group.group_id AS "parent_id"',
-        'group.group_name AS "parent_name"',
-        'groupMember.child_key AS "child_key"',
-        'childUser.user_id AS "child_id"',
-        'childUser.user_name AS "child_name"',
+        'group.group_key AS "child_key"',
+        'group.group_id AS "child_id"',
+        'group.group_name AS "child_name"',
+        'group.internal_div_cd AS "child_internal_div_cd"',
+        '"그룹" AS "child_internal_div_nm"',
+        'group.group_desc AS "child_desc"',
       ])
-      .leftJoin(
-        AdmGroupMember,
-        'groupMember',
-        'group.group_key = groupMember.parent_key',
+      .where('group.group_key NOT IN (' + getMemberList + ')')
+      .andWhere(`group.group_key != '${group_key}'`)
+      .andWhere('group.use_yn = "Y"')
+      .andWhere(
+        '(group.group_id like :member_idnm or group.group_name like :member_idnm)',
+        {
+          member_idnm: `%${member_idnm}%`,
+        },
       )
-      .leftJoin(
-        AdmUser,
-        'childUser',
-        'groupMember.child_key = childUser.user_key',
-      )
-      .where('group.group_key = :group_key', { group_key: `${group_key}` })
+      .orderBy('group.group_id')
+      .getRawMany();
+  }
+
+  /**
+   * 그룹별 속하지 않은 멤버리스트 검색(사용자)
+   * @param group_key
+   * @param member_idnm
+   * @returns 멤버 리스트(사용자)
+   */
+  async searchNoneGroupMembersUser(
+    group_key: string,
+    member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    const getMemberList = this.admGroupMemberManageRepository
+      .createQueryBuilder()
+      .subQuery()
+      .select(['groupMember.child_key AS "user_key"'])
+      .from(AdmGroupMember, 'groupMember')
+      .where(`groupMember.parent_key = '${group_key}'`)
       .andWhere('groupMember.child_internal_div_cd = "U0"')
-      .orderBy('childUser.user_id')
+      .getQuery();
+
+    return this.admUserManageRepository
+      .createQueryBuilder('user')
+      .select([
+        'user.user_key AS "child_key"',
+        'user.user_id AS "child_id"',
+        'user.user_name AS "child_name"',
+        'user.internal_div_cd AS "child_internal_div_cd"',
+        '"사용자" AS "child_internal_div_nm"',
+        'user.user_desc AS "child_desc"',
+      ])
+      .where('user.user_key NOT IN (' + getMemberList + ')')
+      .andWhere('user.use_yn = "Y"')
+      .andWhere(
+        '(user.user_id like :member_idnm or user.user_name like :member_idnm)',
+        {
+          member_idnm: `%${member_idnm}%`,
+        },
+      )
+      .orderBy('user.user_id')
       .getRawMany();
   }
 

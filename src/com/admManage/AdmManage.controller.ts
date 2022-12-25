@@ -34,9 +34,19 @@ export class AdmManageController {
   @Get('/searchGroupMembers')
   @UseGuards(AuthGuard)
   searchGroupMembers(
-    @Query('group_id') group_id: string,
+    @Query('group_key') group_key: string,
+    @Query('member_idnm') member_idnm: string,
   ): Promise<AdmManageDto[]> {
-    return this.admManageService.searchGroupMembers(group_id);
+    return this.admManageService.searchGroupMembers(group_key, member_idnm);
+  }
+
+  @Get('/searchNoneGroupMembers')
+  @UseGuards(AuthGuard)
+  searchNoneGroupChildren(
+    @Query('group_key') group_key: string,
+    @Query('member_idnm') member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return this.admManageService.searchNoneGroupMembers(group_key, member_idnm);
   }
 
   @Get('/searchFileAuth')

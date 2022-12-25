@@ -27,6 +27,7 @@ export class AdmManageService {
   /**
    * 사용자별 그룹리스트 검색
    * @param user_key
+   * @param group_idnm
    * @returns 그룹 리스트
    */
   async searchUserGroups(
@@ -42,6 +43,7 @@ export class AdmManageService {
   /**
    * 사용자별 속하지 않은 그룹리스트 검색
    * @param user_key
+   * @param group_idnm
    * @returns 그룹 리스트
    */
   async searchNoneUserGroups(
@@ -55,22 +57,49 @@ export class AdmManageService {
   }
 
   /**
-   * Group Member 검색
+   * 그룹별 멤버리스트 검색
    * @param group_key
-   * @returns 유저 정보(복수)
+   * @param member_idnm
+   * @returns 멤버 리스트
    */
-  async searchGroupMembers(group_key: string): Promise<AdmManageDto[]> {
-    if (group_key) {
-      return (
-        await this.admManageRepository.searchGroupMemberGroup(group_key)
-      ).concat(await this.admManageRepository.searchGroupMemberUser(group_key));
-    } else {
-      const error = { message: '잘못된 그룹 입니다.' };
-      throw new HttpException(
-        { message: 'Input data validation failed', error },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async searchGroupMembers(
+    group_key: string,
+    member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return (
+      await this.admManageRepository.searchGroupMembersGroup(
+        group_key,
+        member_idnm,
+      )
+    ).concat(
+      await this.admManageRepository.searchGroupMembersUser(
+        group_key,
+        member_idnm,
+      ),
+    );
+  }
+
+  /**
+   * 그룹별 속하지 않은 멤버리스트 검색
+   * @param group_key
+   * @param member_idnm
+   * @returns 멤버 리스트
+   */
+  async searchNoneGroupMembers(
+    group_key: string,
+    member_idnm: string,
+  ): Promise<AdmManageDto[]> {
+    return (
+      await this.admManageRepository.searchNoneGroupMembersGroup(
+        group_key,
+        member_idnm,
+      )
+    ).concat(
+      await this.admManageRepository.searchNoneGroupMembersUser(
+        group_key,
+        member_idnm,
+      ),
+    );
   }
 
   /**
