@@ -55,25 +55,26 @@ export class AdmFileRepository {
    * @returns 파일 정보(복수)
    */
   async searchFiles(file_idnm: string): Promise<AdmFile[]> {
-    return await this.admFileRepository
-      .createQueryBuilder()
-      .select([
-        'file_key',
-        'file_id',
-        'file_name',
-        'CASE WHEN internal_div_cd = "FI" THEN "FILE" ELSE "FOLDER" END AS "internal_div_cd"',
-        'file_sequence',
-        'file_desc',
-        'use_yn',
-        'DATE_FORMAT(created_at,"%Y-%m-%d") AS "created_date"',
-        'create_user_id',
-        'DATE_FORMAT(updated_at,"%Y-%m-%d") AS "updated_date"',
-        'update_user_id',
-      ])
-      .where('file_id like :file_id', { file_id: `%${file_idnm}%` })
-      .orWhere('file_name like :file_name', { file_name: `%${file_idnm}%` })
-      .addOrderBy('file_id', 'ASC')
-      .getRawMany();
+    // return await this.admFileRepository
+    //   .createQueryBuilder()
+    //   .select([
+    //     'file_key',
+    //     'file_id',
+    //     'file_name',
+    //     'CASE WHEN internal_div_cd = "FI" THEN "FILE" ELSE "FOLDER" END AS "internal_div_cd"',
+    //     'file_sequence',
+    //     'file_desc',
+    //     'use_yn',
+    //     'DATE_FORMAT(created_at,"%Y-%m-%d") AS "created_date"',
+    //     'create_user_id',
+    //     'DATE_FORMAT(updated_at,"%Y-%m-%d") AS "updated_date"',
+    //     'update_user_id',
+    //   ])
+    //   .where('file_id like :file_id', { file_id: `%${file_idnm}%` })
+    //   .orWhere('file_name like :file_name', { file_name: `%${file_idnm}%` })
+    //   .addOrderBy('file_id', 'ASC')
+    //   .getRawMany();
+    return await this.admFileRepository.find();
   }
 
   /**
