@@ -59,7 +59,6 @@ export class AdmGroupMemberService {
    * @returns Boolean
    */
   async deleteGroupMember(groupMemberDataList: AdmGroupMemberDto[]) {
-    console.log(groupMemberDataList);
     for (let groupMemberData of groupMemberDataList) {
       if (
         groupMemberData &&

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -9,8 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmFileService } from './AdmFile.service';
-import { AdmFileDto } from './dto/AdmFile.dto';
+import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
+import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
 import { AdmFile } from './entities/AdmFile.entity';
+import { AdmFolder } from './interface/AdmFolder';
+import { FileSearchData } from './interface/FileSearchData';
 
 @Controller('file')
 export class AdmFileController {
@@ -20,25 +24,34 @@ export class AdmFileController {
   @UseGuards(AuthGuard)
   selectFile(
     @Query('file_key') file_key: string,
-  ): Promise<AdmFileDto | undefined> {
+  ): Promise<AdmFile | undefined> {
     return this.admFileService.selectFile(file_key);
+  }
+
+  @Get('/searchFolderTree')
+  @UseGuards(AuthGuard)
+  searchFolderTree(): Promise<AdmFolder[]> {
+    return this.admFileService.searchFolderTree();
   }
 
   @Get('/searchFiles')
   @UseGuards(AuthGuard)
-  searchFiles(@Query('file_idnm') file_idnm: string): Promise<AdmFile[]> {
-    return this.admFileService.searchFiles(file_idnm);
+  searchFiles(
+    @Query('file_key') file_key: string,
+    @Query('file_idnm') file_idnm: string,
+  ): Promise<AdmFile[]> {
+    return this.admFileService.searchFiles(file_key, file_idnm);
   }
 
   @Post('/createFile')
   @UseGuards(AuthGuard)
-  create(@Body() fileData: AdmFileDto) {
+  create(@Body() fileData: AdmFileCreateDto) {
     return this.admFileService.createFile(fileData);
   }
 
   @Patch('/updateFile')
   @UseGuards(AuthGuard)
-  update(@Body() fileData: AdmFileDto) {
+  update(@Body() fileData: AdmFileUpdateDto) {
     return this.admFileService.updateFile(fileData);
   }
 }

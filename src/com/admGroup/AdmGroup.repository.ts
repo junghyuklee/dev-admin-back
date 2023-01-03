@@ -68,8 +68,9 @@ export class AdmGroupRepository {
         'DATE_FORMAT(updated_at,"%Y-%m-%d") AS "updated_date"',
         'update_user_id',
       ])
-      .where('group_id like :group_id', { group_id: `%${group_idnm}%` })
-      .orWhere('group_name like :group_name', { group_name: `%${group_idnm}%` })
+      .where('(group_id like :group_idnm or group_name like :group_idnm)', {
+        group_idnm: `%${group_idnm}%`,
+      })
       .addOrderBy('group_id', 'ASC')
       .getRawMany();
   }

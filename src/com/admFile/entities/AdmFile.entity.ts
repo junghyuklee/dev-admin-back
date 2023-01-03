@@ -9,11 +9,6 @@ import {
 } from 'typeorm';
 
 @Entity('adm_file')
-@Tree('closure-table', {
-  closureTableName: 'adm_file_closure',
-  ancestorColumnName: (column) => 'parent_' + column.propertyName,
-  descendantColumnName: (column) => 'child_' + column.propertyName,
-})
 export class AdmFile extends DefaultEntity {
   @PrimaryGeneratedColumn('uuid')
   file_key?: string;
@@ -36,9 +31,6 @@ export class AdmFile extends DefaultEntity {
   @Column({ type: 'varchar', length: 10, comment: '사용여부' })
   use_yn?: string;
 
-  @TreeParent()
-  parent_file_key?: AdmFile;
-
-  @TreeChildren()
-  children_file_key?: AdmFile[];
+  @Column({ type: 'varchar', length: 100, comment: '부모 Key' })
+  parent_file_key?: string;
 }

@@ -1,13 +1,13 @@
 import {
   IsNotEmpty,
-  IsString,
-  MaxLength,
-  Matches,
-  IsOptional,
   IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
 } from 'class-validator';
 
-export class AdmFileDto {
+export class AdmFileCreateDto {
   @IsOptional()
   @MaxLength(100)
   readonly file_key?: string;
@@ -39,4 +39,7 @@ export class AdmFileDto {
   @IsString()
   @MaxLength(1)
   readonly use_yn?: string;
+
+  @IsNotEmpty()
+  readonly parent_file_key?: string;
 }
