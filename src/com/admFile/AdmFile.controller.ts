@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -14,7 +13,6 @@ import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
 import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
 import { AdmFile } from './entities/AdmFile.entity';
 import { AdmFolder } from './interface/AdmFolder';
-import { FileSearchData } from './interface/FileSearchData';
 
 @Controller('file')
 export class AdmFileController {

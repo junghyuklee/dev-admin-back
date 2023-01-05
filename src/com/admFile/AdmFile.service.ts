@@ -69,7 +69,6 @@ export class AdmFileService {
   async createFile(fileData: AdmFileCreateDto) {
     if (fileData && fileData.file_id) {
       if (!(await this.getOneFileIdCheck(fileData.file_id))) {
-        console.log('3');
         return await this.admFileRepository.createFile(fileData);
       }
     } else {

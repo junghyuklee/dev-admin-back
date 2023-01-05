@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
@@ -27,6 +28,7 @@ export class AdmFileUpdateDto {
   readonly file_name?: string;
 
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   readonly file_sequence!: number;
 
