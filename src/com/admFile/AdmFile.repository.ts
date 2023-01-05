@@ -4,7 +4,6 @@ import { EntityManager, Repository } from 'typeorm';
 import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
 import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
 import { AdmFile } from './entities/AdmFile.entity';
-import { FileSearchData } from './interface/FileSearchData';
 
 @Injectable()
 export class AdmFileRepository {
@@ -49,7 +48,16 @@ export class AdmFileRepository {
   async selectFile(file_key: string): Promise<AdmFile | undefined> {
     return await this.admFileRepository
       .createQueryBuilder()
-      .select(['file_key', 'file_id', 'file_name', 'file_desc', 'use_yn'])
+      .select([
+        'file_key',
+        'file_id',
+        'internal_div_cd',
+        'file_name',
+        'file_sequence',
+        'file_desc',
+        'parent_file_key',
+        'use_yn',
+      ])
       .where('file_key = :file_key', { file_key: `${file_key}` })
       .getRawOne();
   }
