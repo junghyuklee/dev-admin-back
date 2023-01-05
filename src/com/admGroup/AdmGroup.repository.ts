@@ -99,4 +99,21 @@ export class AdmGroupRepository {
       groupData,
     );
   }
+
+  /**
+   * 그룹 삭제
+   * @param group_key
+   * @returns
+   */
+  async deleteGroup(group_key: string) {
+    /* Type-ORM 기본제공 update */
+    return await this.admGroupRepository.update(
+      {
+        group_key: group_key,
+      },
+      {
+        use_yn: 'N',
+      },
+    );
+  }
 }

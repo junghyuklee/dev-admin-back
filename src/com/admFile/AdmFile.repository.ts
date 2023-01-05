@@ -162,4 +162,21 @@ export class AdmFileRepository {
       fileData,
     );
   }
+
+  /**
+   * 파일 또는 폴더 삭제
+   * @param file_key
+   * @returns
+   */
+  async deleteFile(file_key: string) {
+    /* Type-ORM 기본제공 update */
+    return await this.admFileRepository.update(
+      {
+        file_key: file_key,
+      },
+      {
+        use_yn: 'N',
+      },
+    );
+  }
 }

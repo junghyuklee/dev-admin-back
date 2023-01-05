@@ -80,4 +80,32 @@ export class AdmGroupService {
       }
     }
   }
+
+  /**
+   * 그룹 삭제
+   * @param groupKeyList
+   * @returns
+   */
+  async deleteGroup(groupKeyList: any[]) {
+    if (groupKeyList.length > 0) {
+      for (const i in groupKeyList) {
+        if (await this.getOneGroupKeyCheck(groupKeyList[i].key)) {
+          await this.admGroupRepository.deleteGroup(groupKeyList[i].key);
+        } else {
+          const error = { message: '등록되지 않은 그룹 입니다.' };
+          throw new HttpException(
+            { message: 'Input data validation failed', error },
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+      return 200;
+    } else {
+      const error = { message: '삭제하려는 그룹을 선택해주세요.' };
+      throw new HttpException(
+        { message: 'Input data validation failed', error },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

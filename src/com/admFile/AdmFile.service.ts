@@ -99,6 +99,34 @@ export class AdmFileService {
     }
   }
 
+  /**
+   * 폴더 또는 파일 삭제
+   * @param fileKeyList
+   * @returns
+   */
+  async deleteFile(fileKeyList: any[]) {
+    if (fileKeyList.length > 0) {
+      for (const i in fileKeyList) {
+        if (await this.getOneFileKeyCheck(fileKeyList[i].key)) {
+          await this.admFileRepository.deleteFile(fileKeyList[i].key);
+        } else {
+          const error = { message: '등록되지 않은 폴더 또는 파일 입니다.' };
+          throw new HttpException(
+            { message: 'Input data validation failed', error },
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+      return 200;
+    } else {
+      const error = { message: '삭제하려는 폴더 또는 파일을 선택해주세요.' };
+      throw new HttpException(
+        { message: 'Input data validation failed', error },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   async list_to_tree(list: any[]) {
     let map: any = {};
     let node;

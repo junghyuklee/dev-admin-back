@@ -52,4 +52,10 @@ export class AdmFileController {
   update(@Body() fileData: AdmFileUpdateDto) {
     return this.admFileService.updateFile(fileData);
   }
+
+  @Patch('/deleteFile')
+  @UseGuards(AuthGuard)
+  deleteUser(@Body() fileKeyList: any[]) {
+    return this.admFileService.deleteFile(fileKeyList);
+  }
 }

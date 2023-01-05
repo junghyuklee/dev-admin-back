@@ -42,4 +42,10 @@ export class AdmGroupController {
   updateGroup(@Body() groupData: AdmGroupDto) {
     return this.admGroupService.updateGroup(groupData);
   }
+
+  @Patch('/deleteGroup')
+  @UseGuards(AuthGuard)
+  deleteGroup(@Body() groupKeyList: any[]) {
+    return this.admGroupService.deleteGroup(groupKeyList);
+  }
 }

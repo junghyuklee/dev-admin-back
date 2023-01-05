@@ -117,7 +117,7 @@ export class AdmUserService {
 
   /**
    * 유저 삭제
-   * @param usersKeyList
+   * @param userKeyList
    * @returns
    */
   async deleteUser(userKeyList: any[]) {
