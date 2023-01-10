@@ -9,20 +9,20 @@ import {
 } from 'class-validator';
 
 export class AdmFileUpdateDto {
-  @IsOptional()
+  @IsNotEmpty()
   @MaxLength(100)
   readonly file_key?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(10)
   readonly internal_div_cd?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Matches(/^[a-z0-9_-]*$/)
   @MaxLength(100)
   readonly file_id?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(100)
   readonly file_name?: string;
@@ -37,7 +37,7 @@ export class AdmFileUpdateDto {
   @MaxLength(2000)
   readonly file_desc!: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(1)
   readonly use_yn?: string;
