@@ -6,7 +6,6 @@ import { AdmFileAuthDto } from './dto/AdmFileAuth.dto';
 @Controller('fileAuth')
 export class AdmFileAuthController {
   constructor(readonly admFileAuthService: AdmFileAuthService) {}
-
   @Post('/createFileAuth')
   @UseGuards(AuthGuard)
   createFileAuth(@Body() fileAuthDataList: AdmFileAuthDto[]) {

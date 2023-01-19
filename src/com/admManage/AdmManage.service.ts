@@ -1,4 +1,5 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
+import { HttpStatus, Injectable, Query } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { AdmManageRepository } from './AdmManage.repository';
 import { AdmManageDto } from './dto/AdmManage.dto';
@@ -107,17 +108,12 @@ export class AdmManageService {
    * @param file_key
    * @returns 유저 또는 그룹 정보(복수)
    */
-  async searchFileAuths(file_key: string): Promise<AdmManageDto[]> {
-    if (file_key) {
-      return (
-        await this.admManageRepository.searchFileAuthGroup(file_key)
-      ).concat(await this.admManageRepository.searchFileAuthUser(file_key));
-    } else {
-      const error = { message: '잘못된 정보 입니다.' };
-      throw new HttpException(
-        { message: 'Input data validation failed', error },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  async searchFileAuths(
+    @Query('file_key') file_key: string,
+    @Query('idnm') idnm: string,
+  ): Promise<AdmFileAuthVo[]> {
+    return (
+      await this.admManageRepository.searchFileAuthGroup(file_key, idnm)
+    ).concat(await this.admManageRepository.searchFileAuthUser(file_key, idnm));
   }
 }

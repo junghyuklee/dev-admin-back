@@ -1,3 +1,4 @@
+import { AdmFileAuth } from './../admFileAuth/entities/AdmFileAuth.entity';
 import { AdmGroupMember } from './../admGroupMember/entities/AdmGroupMember.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,7 +11,13 @@ import { AdmManageRepository } from './AdmManage.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AdmUser, AdmGroup, AdmGroupMember, AdmFile]),
+    TypeOrmModule.forFeature([
+      AdmUser,
+      AdmGroup,
+      AdmGroupMember,
+      AdmFile,
+      AdmFileAuth,
+    ]),
   ],
   controllers: [AdmManageController],
   providers: [AdmManageService, AdmManageRepository],

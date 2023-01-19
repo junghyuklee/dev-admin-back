@@ -1,12 +1,5 @@
-import { DefaultEntity } from 'src/com/default/entity/AdmFile.entity';
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  Tree,
-  TreeChildren,
-  TreeParent,
-} from 'typeorm';
+import { DefaultEntity } from 'src/com/default/entity/Default.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('adm_file')
 export class AdmFile extends DefaultEntity {

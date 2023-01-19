@@ -1,3 +1,4 @@
+import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmManageService } from './AdmManage.service';
@@ -49,9 +50,12 @@ export class AdmManageController {
     return this.admManageService.searchNoneGroupMembers(group_key, member_idnm);
   }
 
-  @Get('/searchFileAuth')
+  @Get('/searchFileAuths')
   @UseGuards(AuthGuard)
-  searchFileAuths(@Query('file_id') file_id: string): Promise<AdmManageDto[]> {
-    return this.admManageService.searchFileAuths(file_id);
+  searchFileAuths(
+    @Query('file_key') file_key: string,
+    @Query('idnm') idnm: string,
+  ): Promise<AdmFileAuthVo[]> {
+    return this.admManageService.searchFileAuths(file_key, idnm);
   }
 }

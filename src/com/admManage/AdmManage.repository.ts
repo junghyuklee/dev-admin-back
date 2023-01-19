@@ -1,3 +1,4 @@
+import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdmUser } from 'src/com/admUser/entities/AdmUser.entity';
@@ -22,6 +23,9 @@ export class AdmManageRepository {
 
     @InjectRepository(AdmFile)
     private admFileManageRepository: Repository<AdmFile>,
+
+    @InjectRepository(AdmFileAuth)
+    private admFileAuthManageRepository: Repository<AdmFileAuth>,
   ) {}
   /**
    * 토큰 생성용 사용자 정보 조회
@@ -339,30 +343,34 @@ export class AdmManageRepository {
    * @param file_key
    * @returns 그룹 정보(복수)
    */
-  async searchFileAuthGroup(file_key: string): Promise<AdmManageDto[]> {
-    return this.admFileManageRepository
-      .createQueryBuilder()
+  async searchFileAuthGroup(
+    file_key: string,
+    idnm: string,
+  ): Promise<AdmFileAuthVo[]> {
+    return this.admFileAuthManageRepository
+      .createQueryBuilder('admFileAuth')
       .select([
-        'AdmFile.file_key AS "file_key"',
-        'AdmFile.file_id AS "file_id"',
-        'AdmFile.file_name AS "file_name"',
-        'AdmFile.internal_div_cd AS "file_inter_div_cd"',
-        'authMember.auth_key AS "auth_key"',
+        'admFileAuth.file_key AS "file_key"',
+        'admFileAuth.auth_key AS "auth_key"',
+        'admFileAuth.auth_internal_div_cd AS "auth_internal_div_cd"',
         'authGroup.group_id AS "auth_id"',
         'authGroup.group_name AS "auth_name"',
+        'authGroup.group_desc AS "auth_desc"',
       ])
-      .leftJoin(
-        AdmFileAuth,
-        'authMember',
-        'AdmFile.file_key = authMember.file_key',
-      )
       .leftJoin(
         AdmGroup,
         'authGroup',
-        'authMember.auth_key = authGroup.group_key',
+        'admFileAuth.auth_key = authGroup.group_key',
       )
-      .where('AdmFile.file_key = :file_key', { file_key: `${file_key}` })
-      .andWhere('authMember.auth_internal_div_cd = "G0"')
+      .where('admFileAuth.file_key = :file_key', { file_key: `${file_key}` })
+      .andWhere('admFileAuth.auth_internal_div_cd = "G0"')
+      .andWhere(
+        '(authGroup.group_id like :idnm or authGroup.group_name like :idnm)',
+        {
+          idnm: `%${idnm}%`,
+        },
+      )
+      .andWhere('admFileAuth.auth_internal_div_cd = "G0"')
       .orderBy('authGroup.group_id')
       .getRawMany();
   }
@@ -372,27 +380,31 @@ export class AdmManageRepository {
    * @param file_key
    * @returns 사용자 정보(복수)
    */
-  async searchFileAuthUser(file_key: string): Promise<AdmManageDto[]> {
-    return this.admFileManageRepository
-      .createQueryBuilder()
+  async searchFileAuthUser(
+    file_key: string,
+    idnm: string,
+  ): Promise<AdmFileAuthVo[]> {
+    return this.admFileAuthManageRepository
+      .createQueryBuilder('admFileAuth')
       .select([
-        'AdmFile.file_key AS "file_key"',
-        'AdmFile.file_id AS "file_id"',
-        'AdmFile.file_name AS "file_name"',
-        'AdmFile.internal_div_cd AS "file_inter_div_cd"',
-        'authMember.auth_key AS "auth_key"',
+        'admFileAuth.file_key AS "file_key"',
+        'admFileAuth.auth_key AS "auth_key"',
+        'admFileAuth.auth_internal_div_cd AS "auth_internal_div_cd"',
         'authUser.user_id AS "auth_id"',
         'authUser.user_name AS "auth_name"',
+        'authUser.user_desc AS "auth_desc"',
       ])
-      .leftJoin(
-        AdmFileAuth,
-        'authMember',
-        'AdmFile.file_key = authMember.file_key',
+
+      .leftJoin(AdmUser, 'authUser', 'admFileAuth.auth_key = authUser.user_key')
+      .where('admFileAuth.file_key = :file_key', { file_key: `${file_key}` })
+      .andWhere(
+        '(authUser.user_id like :idnm or authUser.user_name like :idnm)',
+        {
+          idnm: `%${idnm}%`,
+        },
       )
-      .leftJoin(AdmUser, 'authUser', 'authMember.auth_key = authUser.user_key')
-      .where('AdmFile.file_key = :file_key', { file_key: `${file_key}` })
-      .andWhere('authMember.auth_internal_div_cd = "U0"')
-      .orderBy('authUser.User_id')
+      .andWhere('admFileAuth.auth_internal_div_cd = "U0"')
+      .orderBy('authUser.user_id')
       .getRawMany();
   }
 }

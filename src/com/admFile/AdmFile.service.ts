@@ -4,7 +4,6 @@ import { AdmFileRepository } from './AdmFile.repository';
 import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
 import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
 import { AdmFile } from './entities/AdmFile.entity';
-import { FileSearchData } from './interface/FileSearchData';
 
 @Injectable()
 export class AdmFileService {
@@ -47,7 +46,8 @@ export class AdmFileService {
 
   /**
    * 파일 테이블 file_id or file_name like 검색
-   * @param fileSearchData
+   * @param file_key
+   * @param file_idnm
    * @returns 파일 정보(복수)
    */
   async searchFiles(file_key: string, file_idnm: string): Promise<AdmFile[]> {

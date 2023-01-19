@@ -1,4 +1,4 @@
-import { DefaultEntity } from 'src/com/default/entity/AdmFile.entity';
+import { DefaultEntity } from 'src/com/default/entity/Default.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('adm_group')
