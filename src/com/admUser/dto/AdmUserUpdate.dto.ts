@@ -1,3 +1,4 @@
+import { DefaultUpdateDto } from './../../default/dto/DefaultUpdate.dto';
 import {
   IsNotEmpty,
   IsNumber,
@@ -7,7 +8,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class AdmUserUpdateDto {
+export class AdmUserUpdateDto extends DefaultUpdateDto {
   @IsNotEmpty()
   @MaxLength(100)
   readonly user_key?: string;
@@ -37,7 +38,7 @@ export class AdmUserUpdateDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  readonly user_desc!: string;
+  readonly user_desc?: string;
 
   @IsNotEmpty()
   @IsString()

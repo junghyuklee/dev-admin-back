@@ -1,3 +1,4 @@
+import { AdmUserVo } from './vo/AdmUser.vo';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { PassWordService } from '../passWord/PassWord.service';
@@ -21,7 +22,7 @@ export class AdmUserService {
    * @param user_key
    * @returns user_id, user_password
    */
-  async getOneUserKeyCheck(user_key: string): Promise<AdmUser | undefined> {
+  async getOneUserKeyCheck(user_key: string): Promise<AdmUserVo | undefined> {
     return await this.admUserRepository.getOneUserKeyCheck(user_key);
   }
 
@@ -30,7 +31,7 @@ export class AdmUserService {
    * @param user_id
    * @returns user_key, user_password
    */
-  async getOneUserIdCheck(user_id: string): Promise<AdmUser | undefined> {
+  async getOneUserIdCheck(user_id: string): Promise<AdmUserVo | undefined> {
     return await this.admUserRepository.getOneUserIdCheck(user_id);
   }
 
@@ -39,7 +40,7 @@ export class AdmUserService {
    * @param user_key
    * @returns user_info
    */
-  async selectUser(user_key: string): Promise<AdmUser | undefined> {
+  async selectUser(user_key: string): Promise<AdmUserVo | undefined> {
     return await this.admUserRepository.selectUser(user_key);
   }
 

@@ -31,12 +31,12 @@ export class AdmFileUpdateDto extends DefaultUpdateDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  readonly file_sequence!: number;
+  readonly file_sequence?: number;
 
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  readonly file_desc!: string;
+  readonly file_desc?: string;
 
   @IsOptional()
   @IsString()

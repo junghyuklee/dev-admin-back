@@ -1,3 +1,4 @@
+import { DefaultUpdateDto } from './../../default/dto/DefaultUpdate.dto';
 import {
   IsNotEmpty,
   IsString,
@@ -17,7 +18,7 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainUpperLetter: true, //대문자 포함 강제
 };
 
-export class AdmUserUpdatePasswordDto {
+export class AdmUserUpdatePasswordDto extends DefaultUpdateDto {
   @IsNotEmpty()
   @MaxLength(100)
   readonly user_key?: string;

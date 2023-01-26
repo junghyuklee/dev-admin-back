@@ -16,10 +16,10 @@ export class AdmFile extends DefaultEntity {
   file_name?: string;
 
   @Column({ type: 'int', comment: '파일 시퀀스' })
-  file_sequence!: number;
+  file_sequence?: number;
 
   @Column({ type: 'varchar', length: 2000, comment: '파일 설명' })
-  file_desc!: string;
+  file_desc?: string;
 
   @Column({ type: 'varchar', length: 10, comment: '사용여부' })
   use_yn?: string;

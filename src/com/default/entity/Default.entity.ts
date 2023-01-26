@@ -19,8 +19,8 @@ export class DefaultEntity extends BaseEntity {
     name: 'updated_at',
     comment: '수정일',
   })
-  updated_at!: Date;
+  updated_at?: Date;
 
   @Column({ type: 'varchar', length: 100, comment: '수정 아이디' })
-  update_user_id!: string;
+  update_user_id?: string;
 }

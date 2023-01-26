@@ -1,3 +1,4 @@
+import { AdmUserVo } from './vo/AdmUser.vo';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,7 +18,7 @@ export class AdmUserRepository {
    * @param user_key
    * @returns user_key, user_password
    */
-  async getOneUserKeyCheck(user_key: string): Promise<AdmUser | undefined> {
+  async getOneUserKeyCheck(user_key: string): Promise<AdmUserVo | undefined> {
     return await this.admUserRepository
       .createQueryBuilder()
       .select(['user_id', 'user_password'])
@@ -30,7 +31,7 @@ export class AdmUserRepository {
    * @param user_id
    * @returns user_key, user_password
    */
-  async getOneUserIdCheck(user_id: string): Promise<AdmUser | undefined> {
+  async getOneUserIdCheck(user_id: string): Promise<AdmUserVo | undefined> {
     return await this.admUserRepository
       .createQueryBuilder()
       .select(['user_key', 'user_password'])
@@ -43,7 +44,7 @@ export class AdmUserRepository {
    * @param user_key
    * @returns user_info
    */
-  async selectUser(user_key?: string): Promise<AdmUser | undefined> {
+  async selectUser(user_key?: string): Promise<AdmUserVo | undefined> {
     return await this.admUserRepository
       .createQueryBuilder()
       .select([

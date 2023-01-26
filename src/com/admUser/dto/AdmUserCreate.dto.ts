@@ -1,3 +1,4 @@
+import { DefaultCreateDto } from './../../default/dto/DefaultCreate.dto';
 import {
   IsNotEmpty,
   IsString,
@@ -20,7 +21,7 @@ const passwordRequirement: PasswordValidationRequirement = {
   mustContainUpperLetter: true, //대문자 포함 강제
 };
 
-export class AdmUserCreateDto {
+export class AdmUserCreateDto extends DefaultCreateDto {
   @IsOptional()
   @MaxLength(100)
   readonly user_key?: string;
@@ -57,7 +58,7 @@ export class AdmUserCreateDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  readonly user_desc!: string;
+  readonly user_desc?: string;
 
   @IsNotEmpty()
   @IsString()

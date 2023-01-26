@@ -34,7 +34,7 @@ export class AdmUser extends BaseEntity {
   user_admin_flag?: string;
 
   @Column({ type: 'varchar', length: 2000, comment: '사용자 설명' })
-  user_desc!: string;
+  user_desc?: string;
 
   @Column({ type: 'varchar', length: 10, comment: '사용여부' })
   use_yn?: string;
@@ -52,8 +52,8 @@ export class AdmUser extends BaseEntity {
     name: 'updated_at',
     comment: '수정일',
   })
-  updated_at!: Date;
+  updated_at?: Date;
 
   @Column({ type: 'varchar', length: 100, comment: '수정 아이디' })
-  update_user_id!: string;
+  update_user_id?: string;
 }

@@ -16,7 +16,7 @@ export class AdmGroup extends DefaultEntity {
   group_name?: string;
 
   @Column({ type: 'varchar', length: 2000, comment: '그룹 설명' })
-  group_desc!: string;
+  group_desc?: string;
 
   @Column({ type: 'varchar', length: 10, comment: '사용여부' })
   use_yn?: string;

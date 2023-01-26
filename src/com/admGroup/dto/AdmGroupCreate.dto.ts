@@ -22,7 +22,7 @@ export class AdmGroupCreateDto extends DefaultCreateDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  readonly group_desc!: string;
+  readonly group_desc?: string;
 
   @IsNotEmpty()
   @IsString()

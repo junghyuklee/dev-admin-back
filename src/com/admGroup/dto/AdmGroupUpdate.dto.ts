@@ -22,7 +22,7 @@ export class AdmGroupUpdateDto extends DefaultUpdateDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  readonly group_desc!: string;
+  readonly group_desc?: string;
 
   @IsOptional()
   @IsString()

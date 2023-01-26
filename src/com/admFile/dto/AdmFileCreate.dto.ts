@@ -31,12 +31,12 @@ export class AdmFileCreateDto extends DefaultCreateDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  readonly file_sequence!: number;
+  readonly file_sequence?: number;
 
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  readonly file_desc!: string;
+  readonly file_desc?: string;
 
   @IsNotEmpty()
   @IsString()

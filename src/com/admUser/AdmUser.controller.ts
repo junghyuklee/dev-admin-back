@@ -1,3 +1,4 @@
+import { AdmUserVo } from './vo/AdmUser.vo';
 import {
   Body,
   Controller,
@@ -22,7 +23,7 @@ export class AdmUserController {
   @UseGuards(AuthGuard)
   selectUser(
     @Query('user_key') user_key: string,
-  ): Promise<AdmUser | undefined> {
+  ): Promise<AdmUserVo | undefined> {
     return this.admUserService.selectUser(user_key);
   }
 
