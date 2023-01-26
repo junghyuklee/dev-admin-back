@@ -1,14 +1,8 @@
-import {
-  IsNotEmpty,
-  IsString,
-  MaxLength,
-  Matches,
-  IsOptional,
-  MinLength,
-} from 'class-validator';
+import { DefaultUpdateDto } from './../../default/dto/DefaultUpdate.dto';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class AdmGroupDto {
-  @IsOptional()
+export class AdmGroupUpdateDto extends DefaultUpdateDto {
+  @IsNotEmpty()
   @MaxLength(100)
   readonly group_key?: string;
 
@@ -16,11 +10,11 @@ export class AdmGroupDto {
   @MaxLength(10)
   readonly internal_div_cd?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(100)
   readonly group_id?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(100)
   readonly group_name?: string;
@@ -30,7 +24,7 @@ export class AdmGroupDto {
   @MaxLength(2000)
   readonly group_desc!: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(1)
   readonly use_yn?: string;

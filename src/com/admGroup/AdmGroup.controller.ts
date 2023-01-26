@@ -2,16 +2,16 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/guard/auth.guard';
-import { AdmGroupDto } from './dto/AdmGroup.dto';
-import { AdmGroup } from './entities/AdmGroup.entity';
 import { AdmGroupService } from './AdmGroup.service';
+import { AdmGroupCreateDto } from './dto/AdmGroupCreate.dto';
+import { AdmGroupUpdateDto } from './dto/AdmGroupUpdate.dto';
+import { AdmGroupVo } from './vo/AdmGroup.vo';
 
 @Controller('group')
 export class AdmGroupController {
@@ -21,25 +21,25 @@ export class AdmGroupController {
   @UseGuards(AuthGuard)
   selectGroup(
     @Query('group_key') group_key: string,
-  ): Promise<AdmGroupDto | undefined> {
+  ): Promise<AdmGroupVo | undefined> {
     return this.admGroupService.selectGroup(group_key);
   }
 
   @Get('/searchGroups')
   @UseGuards(AuthGuard)
-  searchGroups(@Query('group_idnm') group_idnm: string): Promise<AdmGroup[]> {
+  searchGroups(@Query('group_idnm') group_idnm: string): Promise<AdmGroupVo[]> {
     return this.admGroupService.searchGroups(group_idnm);
   }
 
   @Post('/createGroup')
   @UseGuards(AuthGuard)
-  createGroup(@Body() groupData: AdmGroupDto) {
+  createGroup(@Body() groupData: AdmGroupCreateDto) {
     return this.admGroupService.createGroup(groupData);
   }
 
   @Patch('/updateGroup')
   @UseGuards(AuthGuard)
-  updateGroup(@Body() groupData: AdmGroupDto) {
+  updateGroup(@Body() groupData: AdmGroupUpdateDto) {
     return this.admGroupService.updateGroup(groupData);
   }
 

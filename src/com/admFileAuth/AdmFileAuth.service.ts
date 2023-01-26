@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { AdmFileAuthRepository } from './AdmFileAuth.repository';
 import { AdmFileAuthDto } from './dto/AdmFileAuth.dto';
-import { AdmFileAuth } from './entities/AdmFileAuth.entity';
+import { AdmFileAuthVo } from './vo/AdmFileAuth.vo';
 
 @Injectable()
 export class AdmFileAuthService {
@@ -15,7 +15,7 @@ export class AdmFileAuthService {
   async getOneFileAuthCheck(
     file_key: string,
     auth_key: string,
-  ): Promise<AdmFileAuth | undefined> {
+  ): Promise<AdmFileAuthVo | undefined> {
     return await this.admFileAuthRepository.getOneFileAuthCheck(
       file_key,
       auth_key,

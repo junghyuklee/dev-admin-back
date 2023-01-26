@@ -3,7 +3,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { AdmFileRepository } from './AdmFile.repository';
 import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
 import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
-import { AdmFile } from './entities/AdmFile.entity';
+import { AdmFileVo } from './vo/AdmFile.vo';
 
 @Injectable()
 export class AdmFileService {
@@ -13,7 +13,7 @@ export class AdmFileService {
    * @param file_key
    * @returns file_id
    */
-  async getOneFileKeyCheck(file_key: string): Promise<AdmFile | undefined> {
+  async getOneFileKeyCheck(file_key: string): Promise<AdmFileVo | undefined> {
     return await this.admFileRepository.getOneFileKeyCheck(file_key);
   }
 
@@ -22,7 +22,7 @@ export class AdmFileService {
    * @param file_id
    * @returns file_key
    */
-  async getOneFileIdCheck(file_id: string): Promise<AdmFile | undefined> {
+  async getOneFileIdCheck(file_id: string): Promise<AdmFileVo | undefined> {
     return await this.admFileRepository.getOneFileIdCheck(file_id);
   }
 
@@ -31,7 +31,7 @@ export class AdmFileService {
    * @param file_key
    * @returns file_info
    */
-  async selectFile(file_key: string): Promise<AdmFile | undefined> {
+  async selectFile(file_key: string): Promise<AdmFileVo | undefined> {
     return await this.admFileRepository.selectFile(file_key);
   }
 
@@ -50,7 +50,7 @@ export class AdmFileService {
    * @param file_idnm
    * @returns 파일 정보(복수)
    */
-  async searchFiles(file_key: string, file_idnm: string): Promise<AdmFile[]> {
+  async searchFiles(file_key: string, file_idnm: string): Promise<AdmFileVo[]> {
     if (file_key === undefined || file_key === '') {
       file_key = 'Root';
     }

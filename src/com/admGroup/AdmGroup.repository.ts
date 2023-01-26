@@ -1,7 +1,9 @@
+import { AdmGroupVo } from './vo/AdmGroup.vo';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AdmGroupDto } from './dto/AdmGroup.dto';
+import { AdmGroupCreateDto } from './dto/AdmGroupCreate.dto';
+import { AdmGroupUpdateDto } from './dto/AdmGroupUpdate.dto';
 import { AdmGroup } from './entities/AdmGroup.entity';
 
 @Injectable()
@@ -15,7 +17,9 @@ export class AdmGroupRepository {
    * @param group_key
    * @returns group_id
    */
-  async getOneGroupKeyCheck(group_key: string): Promise<AdmGroup | undefined> {
+  async getOneGroupKeyCheck(
+    group_key: string,
+  ): Promise<AdmGroupVo | undefined> {
     return await this.admGroupRepository
       .createQueryBuilder()
       .select(['group_id'])
@@ -28,7 +32,7 @@ export class AdmGroupRepository {
    * @param group_id
    * @returns group_key
    */
-  async getOneGroupIdCheck(group_id?: string): Promise<AdmGroup | undefined> {
+  async getOneGroupIdCheck(group_id?: string): Promise<AdmGroupVo | undefined> {
     return await this.admGroupRepository
       .createQueryBuilder()
       .select(['group_key'])
@@ -41,7 +45,7 @@ export class AdmGroupRepository {
    * @param group_key
    * @returns group_info
    */
-  async selectGroup(group_key?: string): Promise<AdmGroup | undefined> {
+  async selectGroup(group_key?: string): Promise<AdmGroupVo | undefined> {
     return await this.admGroupRepository
       .createQueryBuilder()
       .select(['group_key', 'group_id', 'group_name', 'group_desc', 'use_yn'])
@@ -54,7 +58,7 @@ export class AdmGroupRepository {
    * @param group_idnm
    * @returns 유저 정보(복수)
    */
-  async searchGroups(group_idnm: string): Promise<AdmGroup[]> {
+  async searchGroups(group_idnm: string): Promise<AdmGroupVo[]> {
     return await this.admGroupRepository
       .createQueryBuilder()
       .select([
@@ -80,7 +84,7 @@ export class AdmGroupRepository {
    * @param groupData
    * @returns Boolean
    */
-  async createGroup(groupData: AdmGroupDto) {
+  async createGroup(groupData: AdmGroupCreateDto) {
     /* Type-ORM 기본제공 save */
     return await this.admGroupRepository.save(groupData);
   }
@@ -90,7 +94,7 @@ export class AdmGroupRepository {
    * @param groupData
    * @returns Boolean
    */
-  async updateGroup(groupData: AdmGroupDto) {
+  async updateGroup(groupData: AdmGroupUpdateDto) {
     /* Type-ORM 기본제공 update */
     return await this.admGroupRepository.update(
       {

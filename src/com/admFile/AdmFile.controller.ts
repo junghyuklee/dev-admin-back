@@ -11,8 +11,8 @@ import { AuthGuard } from '../auth/guard/auth.guard';
 import { AdmFileService } from './AdmFile.service';
 import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
 import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
-import { AdmFile } from './entities/AdmFile.entity';
 import { AdmFolder } from './interface/AdmFolder';
+import { AdmFileVo } from './vo/AdmFile.vo';
 
 @Controller('file')
 export class AdmFileController {
@@ -22,7 +22,7 @@ export class AdmFileController {
   @UseGuards(AuthGuard)
   selectFile(
     @Query('file_key') file_key: string,
-  ): Promise<AdmFile | undefined> {
+  ): Promise<AdmFileVo | undefined> {
     return this.admFileService.selectFile(file_key);
   }
 
@@ -37,7 +37,7 @@ export class AdmFileController {
   searchFiles(
     @Query('file_key') file_key: string,
     @Query('file_idnm') file_idnm: string,
-  ): Promise<AdmFile[]> {
+  ): Promise<AdmFileVo[]> {
     return this.admFileService.searchFiles(file_key, file_idnm);
   }
 

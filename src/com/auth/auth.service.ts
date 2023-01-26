@@ -8,7 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { AdmManageService } from '../admManage/AdmManage.service';
 import { AdmManageDto } from '../admManage/dto/AdmManage.dto';
-import { user } from '../interface/user';
+import { user } from '../admUser/interface/user';
 import { PassWordService } from '../passWord/PassWord.service';
 
 @Injectable()

@@ -1,6 +1,7 @@
+import { DefaultCreateDto } from './../../default/dto/DefaultCreate.dto';
 import { IsNotEmpty, MaxLength } from 'class-validator';
 
-export class AdmFileAuthDto {
+export class AdmFileAuthDto extends DefaultCreateDto {
   @IsNotEmpty()
   @MaxLength(100)
   readonly file_key?: string;

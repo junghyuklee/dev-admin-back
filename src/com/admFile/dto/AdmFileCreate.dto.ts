@@ -1,3 +1,4 @@
+import { DefaultCreateDto } from './../../default/dto/DefaultCreate.dto';
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -8,7 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class AdmFileCreateDto {
+export class AdmFileCreateDto extends DefaultCreateDto {
   @IsOptional()
   @MaxLength(100)
   readonly file_key?: string;

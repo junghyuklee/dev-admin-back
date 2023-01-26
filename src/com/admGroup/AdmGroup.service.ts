@@ -1,8 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { AdmGroupRepository } from './AdmGroup.repository';
-import { AdmGroupDto } from './dto/AdmGroup.dto';
-import { AdmGroup } from './entities/AdmGroup.entity';
+import { AdmGroupCreateDto } from './dto/AdmGroupCreate.dto';
+import { AdmGroupUpdateDto } from './dto/AdmGroupUpdate.dto';
+import { AdmGroupVo } from './vo/AdmGroup.vo';
 
 @Injectable()
 export class AdmGroupService {
@@ -12,7 +13,9 @@ export class AdmGroupService {
    * @param group_key
    * @returns group_id
    */
-  async getOneGroupKeyCheck(group_key: string): Promise<AdmGroup | undefined> {
+  async getOneGroupKeyCheck(
+    group_key: string,
+  ): Promise<AdmGroupVo | undefined> {
     return await this.admGroupRepository.getOneGroupKeyCheck(group_key);
   }
 
@@ -21,7 +24,7 @@ export class AdmGroupService {
    * @param group_id
    * @returns group_key
    */
-  async getOneGroupIdCheck(group_id: string): Promise<AdmGroup | undefined> {
+  async getOneGroupIdCheck(group_id: string): Promise<AdmGroupVo | undefined> {
     return await this.admGroupRepository.getOneGroupIdCheck(group_id);
   }
 
@@ -30,7 +33,7 @@ export class AdmGroupService {
    * @param group_key
    * @returns group_info
    */
-  async selectGroup(group_key: string): Promise<AdmGroup | undefined> {
+  async selectGroup(group_key: string): Promise<AdmGroupVo | undefined> {
     return await this.admGroupRepository.selectGroup(group_key);
   }
 
@@ -39,7 +42,7 @@ export class AdmGroupService {
    * @param group_idnm
    * @returns 유저 정보(복수)
    */
-  async searchGroups(group_idnm: string): Promise<AdmGroup[]> {
+  async searchGroups(group_idnm: string): Promise<AdmGroupVo[]> {
     return await this.admGroupRepository.searchGroups(group_idnm);
   }
 
@@ -48,7 +51,7 @@ export class AdmGroupService {
    * @param groupData
    * @returns Boolean
    */
-  async createGroup(groupData: AdmGroupDto) {
+  async createGroup(groupData: AdmGroupCreateDto) {
     if (groupData && groupData.group_id) {
       if (!(await this.getOneGroupIdCheck(groupData.group_id))) {
         return await this.admGroupRepository.createGroup(groupData);
@@ -67,7 +70,7 @@ export class AdmGroupService {
    * @param groupData
    * @returns Boolean
    */
-  async updateGroup(groupData: AdmGroupDto) {
+  async updateGroup(groupData: AdmGroupUpdateDto) {
     if (groupData && groupData.group_id) {
       if (await this.getOneGroupIdCheck(groupData.group_id)) {
         return await this.admGroupRepository.updateGroup(groupData);

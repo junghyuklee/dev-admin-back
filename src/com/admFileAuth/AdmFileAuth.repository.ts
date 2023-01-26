@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AdmFileAuthDto } from './dto/AdmFileAuth.dto';
 import { AdmFileAuth } from './entities/AdmFileAuth.entity';
+import { AdmFileAuthVo } from './vo/AdmFileAuth.vo';
 
 @Injectable()
 export class AdmFileAuthRepository {
@@ -18,7 +19,7 @@ export class AdmFileAuthRepository {
   async getOneFileAuthCheck(
     file_key: string,
     auth_key: string,
-  ): Promise<AdmFileAuth | undefined> {
+  ): Promise<AdmFileAuthVo | undefined> {
     return await this.admFileAuthRepository
       .createQueryBuilder()
       .select(['file_key', 'auth_key'])

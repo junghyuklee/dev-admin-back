@@ -1,4 +1,5 @@
-export class AdmFileAuthVo {
+import { DefaultVo } from './../../default/vo/Default.vo';
+export interface AdmFileAuthVo extends DefaultVo {
   readonly file_key?: string;
   readonly auth_key?: string;
   readonly auth_internal_div_cd?: string;

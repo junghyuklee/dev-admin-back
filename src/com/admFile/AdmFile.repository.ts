@@ -4,6 +4,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { AdmFileCreateDto } from './dto/AdmFileCreate.dto';
 import { AdmFileUpdateDto } from './dto/AdmFileUpdate.dto';
 import { AdmFile } from './entities/AdmFile.entity';
+import { AdmFileVo } from './vo/AdmFile.vo';
 
 @Injectable()
 export class AdmFileRepository {
@@ -19,7 +20,7 @@ export class AdmFileRepository {
    * @param file_key
    * @returns file_id
    */
-  async getOneFileKeyCheck(file_key: string): Promise<AdmFile | undefined> {
+  async getOneFileKeyCheck(file_key: string): Promise<AdmFileVo | undefined> {
     return await this.admFileRepository
       .createQueryBuilder()
       .select(['file_id'])
@@ -32,7 +33,7 @@ export class AdmFileRepository {
    * @param file_id
    * @returns file_key
    */
-  async getOneFileIdCheck(file_id: string): Promise<AdmFile | undefined> {
+  async getOneFileIdCheck(file_id: string): Promise<AdmFileVo | undefined> {
     return await this.admFileRepository
       .createQueryBuilder()
       .select(['file_key'])
@@ -45,7 +46,7 @@ export class AdmFileRepository {
    * @param file_key
    * @returns file_info
    */
-  async selectFile(file_key: string): Promise<AdmFile | undefined> {
+  async selectFile(file_key: string): Promise<AdmFileVo | undefined> {
     return await this.admFileRepository
       .createQueryBuilder()
       .select([
@@ -66,7 +67,7 @@ export class AdmFileRepository {
    * 파일 테이블 폴더 Tree 검색
    * @returns 폴더 정보(복수)
    */
-  async searchFolderTree(): Promise<AdmFile[]> {
+  async searchFolderTree(): Promise<AdmFileVo[]> {
     return await this.admFileRepository.query(
       `WITH RECURSIVE CTE(file_key, file_name, parent_file_key, file_sequence, level, path) AS (
         SELECT 
@@ -110,7 +111,7 @@ export class AdmFileRepository {
    * @param fileSearchData
    * @returns 파일 정보(복수)
    */
-  async searchFiles(file_key: string, file_idnm: string): Promise<AdmFile[]> {
+  async searchFiles(file_key: string, file_idnm: string): Promise<AdmFileVo[]> {
     return await this.admFileRepository
       .createQueryBuilder()
       .select([

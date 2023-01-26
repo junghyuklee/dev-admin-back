@@ -1,3 +1,4 @@
+import { DefaultUpdateDto } from './../../default/dto/DefaultUpdate.dto';
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -8,7 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class AdmFileUpdateDto {
+export class AdmFileUpdateDto extends DefaultUpdateDto {
   @IsNotEmpty()
   @MaxLength(100)
   readonly file_key?: string;
