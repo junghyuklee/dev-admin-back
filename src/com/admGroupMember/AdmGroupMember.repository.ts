@@ -1,3 +1,4 @@
+import { AdmGroupMemberVo } from './vo/AdmGroupMember.vo';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,7 +19,7 @@ export class AdmGroupMemberRepository {
   async getOneGroupMemberCheck(
     parent_key: string,
     child_key: string,
-  ): Promise<AdmGroupMember | undefined> {
+  ): Promise<AdmGroupMemberVo | undefined> {
     return await this.admGroupMemberRepository
       .createQueryBuilder()
       .select(['parent_key', 'child_key'])

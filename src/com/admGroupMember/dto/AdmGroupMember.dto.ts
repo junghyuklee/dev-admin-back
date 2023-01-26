@@ -1,6 +1,7 @@
+import { DefaultCreateDto } from './../../default/dto/DefaultCreate.dto';
 import { IsNotEmpty, MaxLength } from 'class-validator';
 
-export class AdmGroupMemberDto {
+export class AdmGroupMemberDto extends DefaultCreateDto {
   @IsNotEmpty()
   @MaxLength(100)
   readonly parent_key?: string;

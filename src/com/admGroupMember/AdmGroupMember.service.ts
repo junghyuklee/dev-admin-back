@@ -1,8 +1,8 @@
+import { AdmGroupMemberVo } from './vo/AdmGroupMember.vo';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { AdmGroupMemberRepository } from './AdmGroupMember.repository';
 import { AdmGroupMemberDto } from './dto/AdmGroupMember.dto';
-import { AdmGroupMember } from './entities/AdmGroupMember.entity';
 
 @Injectable()
 export class AdmGroupMemberService {
@@ -15,7 +15,7 @@ export class AdmGroupMemberService {
   async getOneGroupMemberCheck(
     parent_key: string,
     child_key: string,
-  ): Promise<AdmGroupMember | undefined> {
+  ): Promise<AdmGroupMemberVo | undefined> {
     return await this.admGroupMemberRepository.getOneGroupMemberCheck(
       parent_key,
       child_key,
