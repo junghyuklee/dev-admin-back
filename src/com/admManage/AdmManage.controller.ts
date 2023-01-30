@@ -1,8 +1,9 @@
-import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
+import { AdmGroupVo } from './../admGroup/vo/AdmGroup.vo';
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/guard/auth.guard';
+import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
 import { AdmManageService } from './AdmManage.service';
-import { AdmManageDto } from './dto/AdmManage.dto';
+import { AdmManageVo } from './vo/AdmManage.vo';
 
 @Controller('manage')
 export class AdmManageController {
@@ -10,7 +11,7 @@ export class AdmManageController {
 
   @Get('/searchUsers')
   @UseGuards(AuthGuard)
-  searchUsers(@Query('user_idnm') user_idnm: string): Promise<AdmManageDto[]> {
+  searchUsers(@Query('user_idnm') user_idnm: string): Promise<AdmManageVo[]> {
     return this.admManageService.searchUsers(user_idnm);
   }
 
@@ -19,7 +20,7 @@ export class AdmManageController {
   searchUserGroups(
     @Query('user_key') user_key: string,
     @Query('group_idnm') group_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmGroupVo[]> {
     return this.admManageService.searchUserGroups(user_key, group_idnm);
   }
 
@@ -28,7 +29,7 @@ export class AdmManageController {
   searchNoneUserGroups(
     @Query('user_key') user_key: string,
     @Query('group_idnm') group_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmGroupVo[]> {
     return this.admManageService.searchNoneUserGroups(user_key, group_idnm);
   }
 
@@ -37,7 +38,7 @@ export class AdmManageController {
   searchGroupMembers(
     @Query('group_key') group_key: string,
     @Query('member_idnm') member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     return this.admManageService.searchGroupMembers(group_key, member_idnm);
   }
 
@@ -46,7 +47,7 @@ export class AdmManageController {
   searchNoneGroupChildren(
     @Query('group_key') group_key: string,
     @Query('member_idnm') member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     return this.admManageService.searchNoneGroupMembers(group_key, member_idnm);
   }
 

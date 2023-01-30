@@ -1,8 +1,9 @@
+import { Injectable, Query } from '@nestjs/common';
 import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
-import { HttpStatus, Injectable, Query } from '@nestjs/common';
-import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { AdmGroupVo } from './../admGroup/vo/AdmGroup.vo';
+import { AdmUserVo } from './../admUser/vo/AdmUser.vo';
 import { AdmManageRepository } from './AdmManage.repository';
-import { AdmManageDto } from './dto/AdmManage.dto';
+import { AdmManageVo } from './vo/AdmManage.vo';
 
 @Injectable()
 export class AdmManageService {
@@ -12,7 +13,7 @@ export class AdmManageService {
    * @param user_id
    * @returns user_id, user_password
    */
-  async getLoginUserInfo(user_id: string): Promise<AdmManageDto | undefined> {
+  async getLoginUserInfo(user_id: string): Promise<AdmUserVo | undefined> {
     return await this.admManageRepository.getLoginUserInfo(user_id);
   }
 
@@ -21,7 +22,7 @@ export class AdmManageService {
    * @param user_idnm
    * @returns 유저 정보(복수)
    */
-  async searchUsers(user_idnm: string): Promise<AdmManageDto[]> {
+  async searchUsers(user_idnm: string): Promise<AdmManageVo[]> {
     return await this.admManageRepository.searchUsers(user_idnm);
   }
 
@@ -34,7 +35,7 @@ export class AdmManageService {
   async searchUserGroups(
     user_key: string,
     group_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmGroupVo[]> {
     return await this.admManageRepository.searchUserGroups(
       user_key,
       group_idnm,
@@ -50,7 +51,7 @@ export class AdmManageService {
   async searchNoneUserGroups(
     user_key: string,
     group_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmGroupVo[]> {
     return await this.admManageRepository.searchNoneUserGroups(
       user_key,
       group_idnm,
@@ -66,7 +67,7 @@ export class AdmManageService {
   async searchGroupMembers(
     group_key: string,
     member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     return (
       await this.admManageRepository.searchGroupMembersGroup(
         group_key,
@@ -89,7 +90,7 @@ export class AdmManageService {
   async searchNoneGroupMembers(
     group_key: string,
     member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     return (
       await this.admManageRepository.searchNoneGroupMembersGroup(
         group_key,

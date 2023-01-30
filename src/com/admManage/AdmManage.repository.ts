@@ -1,4 +1,3 @@
-import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AdmUser } from 'src/com/admUser/entities/AdmUser.entity';
@@ -7,7 +6,10 @@ import { AdmFile } from '../admFile/entities/AdmFile.entity';
 import { AdmGroup } from '../admGroup/entities/AdmGroup.entity';
 import { AdmGroupMember } from '../admGroupMember/entities/AdmGroupMember.entity';
 import { AdmFileAuth } from './../admFileAuth/entities/AdmFileAuth.entity';
-import { AdmManageDto } from './dto/AdmManage.dto';
+import { AdmFileAuthVo } from './../admFileAuth/vo/AdmFileAuth.vo';
+import { AdmGroupVo } from './../admGroup/vo/AdmGroup.vo';
+import { AdmUserVo } from './../admUser/vo/AdmUser.vo';
+import { AdmManageVo } from './vo/AdmManage.vo';
 
 @Injectable()
 export class AdmManageRepository {
@@ -32,7 +34,7 @@ export class AdmManageRepository {
    * @param user_id
    * @returns 사용자 정보
    */
-  async getLoginUserInfo(user_id?: string): Promise<AdmManageDto | undefined> {
+  async getLoginUserInfo(user_id?: string): Promise<AdmUserVo | undefined> {
     return await this.admUserManageRepository
       .createQueryBuilder('user')
       .select([
@@ -52,7 +54,7 @@ export class AdmManageRepository {
    * @param user_idnm
    * @returns 사용자 정보(복수)
    */
-  async searchUsers(user_idnm: string): Promise<AdmManageDto[]> {
+  async searchUsers(user_idnm: string): Promise<AdmManageVo[]> {
     /**
      * 사용자 별 그룹 리스트 조회 subquery
      */
@@ -61,7 +63,6 @@ export class AdmManageRepository {
       .subQuery()
       .select([
         'user.user_key AS "user_key"',
-        // 'group_concat(groupMember.parent_key) AS "group_key_list"',
         'group_concat(group.group_name) AS "group_name_list"',
       ])
       .from(AdmUser, 'user')
@@ -81,7 +82,6 @@ export class AdmManageRepository {
       .select([
         'user.user_key AS "user_key"',
         'user.user_id AS "user_id"',
-        'user.user_password AS "user_password"',
         'DATE_FORMAT(user.user_password_chg_date,"%Y-%m-%d") AS "user_password_chg_date"',
         'user.user_name AS "user_name"',
         'user.user_login_fail_cnt AS "user_login_fail_cnt"',
@@ -122,7 +122,7 @@ export class AdmManageRepository {
   async searchUserGroups(
     user_key: string,
     group_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmGroupVo[]> {
     return this.admGroupMemberManageRepository
       .createQueryBuilder('groupMember')
       .select([
@@ -154,7 +154,7 @@ export class AdmManageRepository {
   async searchNoneUserGroups(
     user_key: string,
     group_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmGroupVo[]> {
     const getNoneUserGroupList = this.admGroupMemberManageRepository
       .createQueryBuilder()
       .subQuery()
@@ -192,7 +192,7 @@ export class AdmManageRepository {
   async searchGroupMembersGroup(
     group_key: string,
     member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     return this.admGroupMemberManageRepository
       .createQueryBuilder('groupMember')
       .select([
@@ -228,7 +228,7 @@ export class AdmManageRepository {
   async searchGroupMembersUser(
     group_key: string,
     member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     return this.admGroupMemberManageRepository
       .createQueryBuilder('groupMember')
       .select([
@@ -264,7 +264,7 @@ export class AdmManageRepository {
   async searchNoneGroupMembersGroup(
     group_key: string,
     member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     const getMemberList = this.admGroupMemberManageRepository
       .createQueryBuilder()
       .subQuery()
@@ -306,7 +306,7 @@ export class AdmManageRepository {
   async searchNoneGroupMembersUser(
     group_key: string,
     member_idnm: string,
-  ): Promise<AdmManageDto[]> {
+  ): Promise<AdmManageVo[]> {
     const getMemberList = this.admGroupMemberManageRepository
       .createQueryBuilder()
       .subQuery()

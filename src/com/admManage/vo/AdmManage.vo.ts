@@ -1,0 +1,11 @@
+import { DefaultVo } from '../../default/vo/Default.vo';
+export interface AdmManageVo extends DefaultVo {
+  readonly user_key?: string;
+  readonly group_name_list?: string[];
+  readonly child_key?: string;
+  readonly child_id?: string;
+  readonly child_name?: string;
+  readonly child_internal_div_cd?: string;
+  readonly child_internal_div_nm?: string;
+  readonly child_desc?: string;
+}
