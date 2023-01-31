@@ -34,7 +34,7 @@ export class AdmManageRepository {
    * @param user_id
    * @returns 사용자 정보
    */
-  async getLoginUserInfo(user_id?: string): Promise<AdmUserVo | undefined> {
+  async getLoginUserInfo(user_id?: string): Promise<AdmManageVo | undefined> {
     return await this.admUserManageRepository
       .createQueryBuilder('user')
       .select([
@@ -350,11 +350,11 @@ export class AdmManageRepository {
     return this.admFileAuthManageRepository
       .createQueryBuilder('admFileAuth')
       .select([
-        'admFileAuth.file_key AS "file_key"',
         'admFileAuth.auth_key AS "auth_key"',
-        'admFileAuth.auth_internal_div_cd AS "auth_internal_div_cd"',
         'authGroup.group_id AS "auth_id"',
         'authGroup.group_name AS "auth_name"',
+        'admFileAuth.auth_internal_div_cd AS "auth_internal_div_cd"',
+        '"그룹" AS "auth_internal_div_nm"',
         'authGroup.group_desc AS "auth_desc"',
       ])
       .leftJoin(
@@ -364,6 +364,7 @@ export class AdmManageRepository {
       )
       .where('admFileAuth.file_key = :file_key', { file_key: `${file_key}` })
       .andWhere('admFileAuth.auth_internal_div_cd = "G0"')
+      .andWhere('authGroup.use_yn = "Y"')
       .andWhere(
         '(authGroup.group_id like :idnm or authGroup.group_name like :idnm)',
         {
@@ -387,24 +388,99 @@ export class AdmManageRepository {
     return this.admFileAuthManageRepository
       .createQueryBuilder('admFileAuth')
       .select([
-        'admFileAuth.file_key AS "file_key"',
         'admFileAuth.auth_key AS "auth_key"',
-        'admFileAuth.auth_internal_div_cd AS "auth_internal_div_cd"',
         'authUser.user_id AS "auth_id"',
         'authUser.user_name AS "auth_name"',
+        'admFileAuth.auth_internal_div_cd AS "auth_internal_div_cd"',
+        '"사용자" AS "auth_internal_div_nm"',
         'authUser.user_desc AS "auth_desc"',
       ])
-
       .leftJoin(AdmUser, 'authUser', 'admFileAuth.auth_key = authUser.user_key')
       .where('admFileAuth.file_key = :file_key', { file_key: `${file_key}` })
+      .andWhere('admFileAuth.auth_internal_div_cd = "U0"')
+      .andWhere('authUser.use_yn = "Y"')
       .andWhere(
         '(authUser.user_id like :idnm or authUser.user_name like :idnm)',
         {
           idnm: `%${idnm}%`,
         },
       )
-      .andWhere('admFileAuth.auth_internal_div_cd = "U0"')
       .orderBy('authUser.user_id')
+      .getRawMany();
+  }
+
+  /**
+   * File 또는 Folder에 권한이 없는 그룹 검색
+   * @param file_key
+   * @returns 그룹 정보(복수)
+   */
+  async searchNoneFileAuthGroup(
+    file_key: string,
+    idnm: string,
+  ): Promise<AdmFileAuthVo[]> {
+    const getAuthList = this.admFileAuthManageRepository
+      .createQueryBuilder()
+      .subQuery()
+      .select(['fileAuth.auth_key AS "group_key"'])
+      .from(AdmFileAuth, 'fileAuth')
+      .where(`fileAuth.file_key = '${file_key}'`)
+      .andWhere('fileAuth.auth_internal_div_cd = "G0"')
+      .getQuery();
+
+    return this.admFileAuthManageRepository
+      .createQueryBuilder('group')
+      .select([
+        'group.group_key AS "auth_key"',
+        'group.group_id AS "auth_id"',
+        'group.group_name AS "auth_name"',
+        'group.internal_div_cd AS "auth_internal_div_cd"',
+        '"그룹" AS "auth_internal_div_nm"',
+        'group.group_desc AS "auth_desc"',
+      ])
+      .where('group.group_key NOT IN (' + getAuthList + ')')
+      .andWhere('group.use_yn = "Y"')
+      .andWhere('(group.group_id like :idnm or group.group_name like :idnm)', {
+        idnm: `%${idnm}%`,
+      })
+      .orderBy('group.group_id')
+      .getRawMany();
+  }
+
+  /**
+   * File 또는 Folder에 권한이 없는 사용자 검색
+   * @param group_key
+   * @param member_idnm
+   * @returns 멤버 리스트(사용자)
+   */
+  async searchNoneFileAuthUser(
+    file_key: string,
+    idnm: string,
+  ): Promise<AdmManageVo[]> {
+    const getAuthList = this.admFileAuthManageRepository
+      .createQueryBuilder()
+      .subQuery()
+      .select(['fileAuth.auth_key AS "user_key"'])
+      .from(AdmFileAuth, 'fileAuth')
+      .where(`fileAuth.file_key = '${file_key}'`)
+      .andWhere('fileAuth.auth_internal_div_cd = "U0"')
+      .getQuery();
+
+    return this.admUserManageRepository
+      .createQueryBuilder('user')
+      .select([
+        'user.user_key AS "auth_key"',
+        'user.user_id AS "auth_id"',
+        'user.user_name AS "auth_name"',
+        'user.internal_div_cd AS "auth_internal_div_cd"',
+        '"사용자" AS "auth_internal_div_nm"',
+        'user.user_desc AS "auth_desc"',
+      ])
+      .where('user.user_key NOT IN (' + getAuthList + ')')
+      .andWhere('user.use_yn = "Y"')
+      .andWhere('(user.user_id like :idnm or user.user_name like :idnm)', {
+        idnm: `%${idnm}%`,
+      })
+      .orderBy('user.user_id')
       .getRawMany();
   }
 }

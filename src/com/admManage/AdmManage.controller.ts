@@ -56,7 +56,16 @@ export class AdmManageController {
   searchFileAuths(
     @Query('file_key') file_key: string,
     @Query('idnm') idnm: string,
-  ): Promise<AdmFileAuthVo[]> {
+  ): Promise<AdmManageVo[]> {
     return this.admManageService.searchFileAuths(file_key, idnm);
+  }
+
+  @Get('/searchNoneFileAuths')
+  @UseGuards(AuthGuard)
+  searchNoneFileAuths(
+    @Query('file_key') file_key: string,
+    @Query('idnm') idnm: string,
+  ): Promise<AdmManageVo[]> {
+    return this.admManageService.searchNoneFileAuths(file_key, idnm);
   }
 }

@@ -13,7 +13,7 @@ export class AdmManageService {
    * @param user_id
    * @returns user_id, user_password
    */
-  async getLoginUserInfo(user_id: string): Promise<AdmUserVo | undefined> {
+  async getLoginUserInfo(user_id: string): Promise<AdmManageVo | undefined> {
     return await this.admManageRepository.getLoginUserInfo(user_id);
   }
 
@@ -105,7 +105,7 @@ export class AdmManageService {
   }
 
   /**
-   * File Auth 사용자, 그룹 검색
+   * File에 권한을 갖고 있는 사용자, 그룹 검색
    * @param file_key
    * @returns 유저 또는 그룹 정보(복수)
    */
@@ -116,5 +116,21 @@ export class AdmManageService {
     return (
       await this.admManageRepository.searchFileAuthGroup(file_key, idnm)
     ).concat(await this.admManageRepository.searchFileAuthUser(file_key, idnm));
+  }
+
+  /**
+   * File에 권한을 갖고 없는 사용자, 그룹 검색
+   * @param file_key
+   * @returns 유저 또는 그룹 정보(복수)
+   */
+  async searchNoneFileAuths(
+    @Query('file_key') file_key: string,
+    @Query('idnm') idnm: string,
+  ): Promise<AdmFileAuthVo[]> {
+    return (
+      await this.admManageRepository.searchNoneFileAuthGroup(file_key, idnm)
+    ).concat(
+      await this.admManageRepository.searchNoneFileAuthUser(file_key, idnm),
+    );
   }
 }

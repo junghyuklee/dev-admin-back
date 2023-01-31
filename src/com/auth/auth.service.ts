@@ -1,3 +1,4 @@
+import { AdmManageVo } from './../admManage/vo/AdmManage.vo';
 import { AdmUserService } from './../admUser/AdmUser.service';
 import { Payload } from './jwt/jwt.payload';
 import {
@@ -7,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AdmManageService } from '../admManage/AdmManage.service';
-import { AdmManageDto } from '../admManage/dto/AdmManage.dto';
 import { user } from '../admUser/interface/user';
 import { PassWordService } from '../passWord/PassWord.service';
 
@@ -29,7 +29,7 @@ export class AuthService {
   async validateUser(
     user_id: string,
     plainTextPassword: string,
-  ): Promise<AdmManageDto | undefined> {
+  ): Promise<AdmManageVo | undefined> {
     const admUser = await this.admManageService.getLoginUserInfo(user_id);
     if (admUser !== undefined && admUser.user_password !== undefined) {
       const passwordValid = await this.passwordService.validatePassword(
@@ -93,7 +93,7 @@ export class AuthService {
   }
 
   /* 토큰 체크 */
-  async tokenValidateUser(payload: Payload): Promise<AdmManageDto | undefined> {
+  async tokenValidateUser(payload: Payload): Promise<AdmManageVo | undefined> {
     return await this.admUserService.getOneUserKeyCheck(payload.user_key);
   }
 }
