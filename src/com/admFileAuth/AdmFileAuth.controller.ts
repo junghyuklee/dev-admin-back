@@ -6,13 +6,13 @@ import { AdmFileAuthDto } from './dto/AdmFileAuth.dto';
 @Controller('fileAuth')
 export class AdmFileAuthController {
   constructor(readonly admFileAuthService: AdmFileAuthService) {}
-  @Post('/createFileAuth')
+  @Post('/addFileAuth')
   @UseGuards(AuthGuard)
-  createFileAuth(@Body() fileAuthDataList: AdmFileAuthDto[]) {
-    return this.admFileAuthService.createFileAuth(fileAuthDataList);
+  addGroupMember(@Body() fileAuthDataList: AdmFileAuthDto[]) {
+    return this.admFileAuthService.addFileAuth(fileAuthDataList);
   }
 
-  @Delete('/deleteFileAuth')
+  @Post('/deleteFileAuth')
   @UseGuards(AuthGuard)
   deleteFileAuth(@Body() fileAuthDataList: AdmFileAuthDto[]) {
     return this.admFileAuthService.deleteFileAuth(fileAuthDataList);

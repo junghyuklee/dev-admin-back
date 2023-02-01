@@ -33,7 +33,7 @@ export class AdmFileAuthRepository {
    * @param fileAuthData
    * @returns Boolean
    */
-  async createFileAuth(fileAuthData: AdmFileAuthDto) {
+  async addFileAuth(fileAuthData: AdmFileAuthDto) {
     /* Type-ORM 기본제공 save */
     return await this.admFileAuthRepository.save(fileAuthData);
   }

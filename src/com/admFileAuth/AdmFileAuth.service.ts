@@ -27,16 +27,16 @@ export class AdmFileAuthService {
    * @param fileAuthDataList
    * @returns Boolean
    */
-  async createFileAuth(fileAuthDataList: AdmFileAuthDto[]) {
+  async addFileAuth(fileAuthDataList: AdmFileAuthDto[]) {
     for (let fileAuthData of fileAuthDataList) {
       if (fileAuthData && fileAuthData.file_key && fileAuthData.auth_key) {
         if (
-          await this.getOneFileAuthCheck(
+          !(await this.getOneFileAuthCheck(
             fileAuthData.file_key,
             fileAuthData.auth_key,
-          )
+          ))
         ) {
-          return await this.admFileAuthRepository.createFileAuth(fileAuthData);
+          await this.admFileAuthRepository.addFileAuth(fileAuthData);
         }
       } else {
         const error = {
@@ -48,6 +48,7 @@ export class AdmFileAuthService {
         );
       }
     }
+    return;
   }
 
   /**
@@ -64,7 +65,7 @@ export class AdmFileAuthService {
             fileAuthData.auth_key,
           )
         ) {
-          return await this.admFileAuthRepository.deleteFileAuth(fileAuthData);
+          await this.admFileAuthRepository.deleteFileAuth(fileAuthData);
         }
       } else {
         const error = { message: '권한이 없는 사용자 또는 그룹 입니다.' };
@@ -74,5 +75,6 @@ export class AdmFileAuthService {
         );
       }
     }
+    return;
   }
 }

@@ -13,9 +13,6 @@ export class AdmFileAuth extends DefaultEntity {
   })
   auth_key?: string;
 
-  @Column({ type: 'varchar', length: 10, comment: '폴더/파일 구분코드' })
-  file_internal_div_cd?: string;
-
   @Column({ type: 'varchar', length: 10, comment: '권한 사용자/그룹 구분코드' })
   auth_internal_div_cd?: string;
 }

@@ -427,7 +427,7 @@ export class AdmManageRepository {
       .andWhere('fileAuth.auth_internal_div_cd = "G0"')
       .getQuery();
 
-    return this.admFileAuthManageRepository
+    return this.admGroupManageRepository
       .createQueryBuilder('group')
       .select([
         'group.group_key AS "auth_key"',
